@@ -1,105 +1,63 @@
-# NOMAD's parser example plugin
+# NOMAD's pedestrian dynamics extension (PedDyn-ext)
+This NOMAD plug-in is a fork of the NOMAD template: https://github.com/nomad-coe/nomad-parser-plugin-example
 
-## Getting started
+This python package contains NOMAD schemas, normalizers, parsers for pedestrian dynamics research. 
+If you are not familiar with schemas, normalizers and parsers please find a brief introduction here: [plugin_types_and_data_processing.md](docs/concepts/plugin_types_and_data_processing.md).
 
-### Fork the project
 
-Go to the github project page https://github.com/nomad-coe/nomad-parser-plugin-example, hit
-fork (and leave a star, thanks!). Maybe you want to rename the project while forking!
 
-### Clone your fork
 
-Follow the github instructions. The URL and directory depends on your user name or organization and the
-project name you choose. But, it should look somewhat like this:
 
-```
-git clone git@github.com:markus1978/my-nomad-schema.git
-cd my-nomad-schema
-```
 
-### Install the dependencies
 
-You should create a virtual environment. You will need the `nomad-lab` package (and `pytest`).
-You need at least Python 3.9.
+## Structure of this repository
+
+Each parser and normalizer is realized as individual sub-package as shown in the FAIRmat Tutorial 9 (https://www.youtube.com/watch?v=hZZtxXMoSq8, 07:05 - 09:30).
+Each sub-package contains a `nomad_plugin.yaml` file that contains the metadata of the plug-in.
+
+Note: when you change modules or class names, make sure to update the `nomad_plugin.yaml` accordingly!
+
+
+
+## System requirements
+
+This plug-in was tested for Python3.9 only.
+According to the instructions in https://github.com/nomad-coe/nomad-schema-plugin-example, 
+the NOMAD Python package was installed in a virtual environment: 
 
 ```sh
-python3 -m venv .pyenv
-source .pyenv/bin/activate
 pip install --upgrade pip
 pip install '.[dev]' --index-url https://gitlab.mpcdf.mpg.de/api/v4/projects/2187/packages/pypi/simple
 ```
 
-**Note!**
-Until we have an official pypi NOMAD release with the plugins functionality. Make
-sure to include NOMAD's internal package registry (e.g. via `--index-url`). Follow the instructions
-in `requirements.txt`.
 
-### Run the tests
+## How to install PedDyn-ext to an oasis
 
-Make sure the current directory is in your path:
+### Step 1: Setup an oasis
 
-```sh
-export PYTHONPATH=.
-```
+There are three options available how plug-ins can be installed in a NOMAD Oasis: see https://nomad-lab.eu/prod/v1/docs/howto/oasis/plugins_install.html
+It is up to the administrator of the Oasis which option to pick. 
 
-You can run automated tests with `pytest`:
+#### Some comments on option 1
+There is a NOMAD instance ("oasis") provided by the pedestrian-dynamics-group on github:
+https://github.com/pedestrian-dynamics-HM/nomad-oasis
+It is an instantiation of the template repository of the NOMAD organization: https://github.com/FAIRmat-NFDI/nomad-distribution-template.
+Note that the instantiation contains a Docker image that was automatically generated when instantiating the template: https://github.com/pedestrian-dynamics-HM/nomad-oasis/pkgs/container/nomad-oasis
 
-```sh
-pytest -svx tests
-```
-
-### Run linting
-
-```sh
-ruff check .
-```
-
-### Run auto-formatting
-
-This is entirely optional. To add this as a check in github actions pipeline, uncomment the `ruff-formatting` step in `./github/workflows/actions.yaml`.
-
-```sh
-ruff format .
-```
-
-You can parse an example archive that uses the schema with `nomad`
-(installed via `nomad-lab` Python package):
-
-```sh
-nomad parse tests/data/test.example-format.txt --show-archive
-```
-
-## Developing your schema
-
-You can now start to develop you schema. Here are a few things that you might want to change:
-
-- The metadata in `nomad_plugin.yaml`.
-- The name of the Python package `nomadparserexample`. If you want to define multiple plugins, you can nest packages.
-- The name of the example parser `ExampleParser` and the schema definitions it might define.
-- When you change module and class names, make sure to update the `nomad_plugin.yaml` accordingly.
+Note that the NOMAD documentation is still under progress:
+If one follows the instructions from the oasis template (https://github.com/FAIRmat-NFDI/nomad-distribution-template),
+one gets the following bug: https://github.com/FAIRmat-NFDI/nomad-distribution-template/issues/22
 
 
-## Build the python package
+### Step 2: Add the plug-in to a NOMAD Oasis
 
-The `pyproject.toml` file contains everything that is necessary to turn the project
-into a pip installable python package. Run the python build tool to create a package distribution:
+How to add the plug-in to an oasis, depends on how the oasis has been setup in step 1. 
+Please see the documentation: https://nomad-lab.eu/prod/v1/docs/howto/oasis/plugins_install.html
 
-```
-pip install build
-python -m build --sdist
-```
-
-You can install the package with pip:
-
-```
-pip install dist/nomad-schema-plugin-example-1.0.tar.gz
-```
-
-Read more about python packages, `pyproject.toml`, and how to upload packages to PyPI
-on the [PyPI documentation](https://packaging.python.org/en/latest/tutorials/packaging-projects/).
+Note that the NOMAD-specific configuration files need to be adjusted. This may involve:
+- the global nomad.yaml file (contained in the oasis repository/directory)
+- the plug-in-specific nomad*.yaml files (contained in THIS repository)
 
 
-## Next steps
 
-To learn more about plugins, how to add them to an Oasis, how to publish them, read our
-documentation on plugins: https://nomad-lab.eu/docs/plugins/plugins.html.
+

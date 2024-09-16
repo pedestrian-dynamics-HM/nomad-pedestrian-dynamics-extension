@@ -3,6 +3,8 @@ from nomad.datamodel import EntryMetadata
 from nomad.metainfo import MSection, Quantity
 
 
+
+
 class ExampleSection(MSection):
     pattern = Quantity(type=np.float64, shape=['*', '3'])
 
