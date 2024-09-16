@@ -1,8 +1,7 @@
 # NOMAD's pedestrian dynamics extension (PedDyn-ext)
 This NOMAD plug-in is a fork of the NOMAD template: https://github.com/nomad-coe/nomad-parser-plugin-example
 
-This python package contains NOMAD schemas, normalizers, parsers for pedestrian dynamics research. 
-If you are not familiar with schemas, normalizers and parsers please find a brief introduction here: [plugin_types_and_data_processing.md](docs/concepts/plugin_types_and_data_processing.md).
+This python package contains schema plug-ins and parser plug-ins (see [plugin_types_and_data_processing.md](docs/concepts/plugin_types_and_data_processing.md) for an introduction to these plug-in types).
 
 
 
@@ -21,14 +20,7 @@ Note: when you change modules or class names, make sure to update the `nomad_plu
 
 ## System requirements
 
-This plug-in was tested for Python3.9 only.
-According to the instructions in https://github.com/nomad-coe/nomad-schema-plugin-example, 
-the NOMAD Python package was installed in a virtual environment: 
-
-```sh
-pip install --upgrade pip
-pip install '.[dev]' --index-url https://gitlab.mpcdf.mpg.de/api/v4/projects/2187/packages/pypi/simple
-```
+See the NOMAD documentation. The plug-ins of this repository were tested with Python3.9 (see [index.md](docs/index.md)) 
 
 
 ## How to install PedDyn-ext to an oasis

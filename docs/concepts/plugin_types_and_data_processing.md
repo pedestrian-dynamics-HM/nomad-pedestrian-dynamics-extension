@@ -1,34 +1,40 @@
 
-# General NOMAD concepts 
+# Parser plug-ins vs. schema plug-ins
 This information is based on the FAIRmat Tutorial 12 (https://www.youtube.com/watch?v=mc5kZjeF7KU).
 
-## How to add a data entry in NOMAD
 
-There are two ways how to add a data entry in NOMAD:
+## Distinction
+There are two types of plug-ins to process data. Which type of plug-in is triggered depends on the user's choice of the upload method:
 
 ![two_options_add_entry.png](../images/two_options_add_entry.png)
 
+- The parser plug-in is triggered when the user picks option 1.
+- The schema plug-in (also called normalizer plug-in) is triggered when the user picks option 2.
 
-Option 1 is that the user uploads an archive with raw data.
-A suitable parser is automatically assigned depending on the raw data structure (“matching”). The actual result data is automatically processed from the raw data (“parsing”). 
-The result data is processed automatically (“normalizing”). This option is useful when the data from the experiment or simulation needs to be formatted or for generating plots.
+If the user uploads an archive with raw data (option 1), a suitable parser is automatically assigned depending on the raw data structure (“matching”). The result data is automatically processed from the raw data (“parsing”). 
+The result data is again processed to extract meta data (“normalizing”). Users typically choose this option when they only have raw data from an experiment or simulation which needs to be formatted first before one can derive results.
 
-Option 2 is that the user fils meta-data into an input mask. The user uploads result data (no raw data!!!). 
+If the user chooses the schema option (option 2), an empty data entry is generated in which the user puts meta data manually. Raw data is not formatted. The user has to upload the formatted result data. 
 The result data can be processed automatically to extract meta data (“normalizing”).
 
 
-| Option           | Raw data                | Result data                                                       | Meta data                                                                                                     |
-|------------------|-------------------------|-------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| 1 Archive upload | is provided by the user | is generated automatically from the raw data (requires: a parser) | is extracted automatically from the processed data  (requires: a normalizer)                                  |
-| 2 Schema usage   | -                       | is provided by the user                                           | is provided by the USER   AND/OR  is extracted automatically from the processed data (requires: a normalizer) |
+![fairmat_tutorial_12_interplay_plugins.png](../images/fairmat_tutorial_12_interplay_plugins.png)
+
+## Choice of plug-in type
+
+Which type of plug-in should be used, depends on the use case. If the data from the experiment or simulation is already in the final format, the schema plug-in may be favored (the parser plug-in created an overhead). If the data needs to be formated, the parser plug-in is required. 
+
+| Option           | Raw data                         | Result data                                                               | Meta data                                                                                                             |
+|------------------|----------------------------------|---------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| 1 Parser plug-in | needs to be provided by the user | is generated automatically from the raw data (requires a parser() method) | is extracted automatically from the processed data  (requires a normalizer() method)                                  |
+| 2 Schema plug-in | -                                | needs to be provided by the user                                        | is provided by the USER   AND/OR  is extracted automatically from the processed data (requires a normalizer() method) |
 
 
+## Comments on triggering plug-ins
 
+### Triggering the schema plug-in
 
-### Option 1: adding a data entry using a schema 
-
-The user selects a schema over the webinterface. The user fill the input mask with data and meta-data. If the schema contains a normalizer meta-data is automatically generated from the user input when saving the  user input.
-
+The user selects a schema over the web-interface. The user fill the input mask with data and meta-data. If the schema contains a normalizer meta-data is automatically generated from the user input when saving the  user input.
 Schemas are available as "built-in schema" on the web-interface. Here is an example schema ("XRay Diffraction"):
 
 ![schema_web_browser.png](../images/schema_web_browser.png)
@@ -37,47 +43,11 @@ The experimental data is added directly in the data entry. When clicking "save" 
 
 ![schema_data_upload.png](../images/schema_data_upload.png)
 
-### Option 2: adding a data entry using a parser
+### Triggering the parser plug-in
 
-The user provides a data archive
+The user provides a data archive. Then everything is processed automatically.
 
 ![data_archive.png](../images/data_archive.png)
-
-
-
-
-Important: the normalizer is executed after the parsing process: 
-
-![fairmat_tutorial_12_interplay_plugins.png](../images/fairmat_tutorial_12_interplay_plugins.png)
-
-## Schemas
-Schemas define the structure of data:
-
-![fairmat_tutorial_12_schemas.png](../images/fairmat_tutorial_12_schemas.png)
-
-
-
-
-
-
-### How to define schemas
-
-Schemas can be specified as *.yaml file OR as Python class. We use Python classes.
-In Python a schema is defined by implementing the MSection interface:
-![fairmat_tutorial_12_implementation.png](../images/fairmat_tutorial_12_implementation.png)
-
-
-NOMAD provides interfaces for schemas for empirical data and simulation data.
-
-We implement these interfaces for pedestrian dynamics specific applications:
-- empirical research: laboratory experiments, field observations
-- simulation studies: conducted with the Optimal Steps Model, conducted with the Social Force Model, ... 
-
-![fairmat_tutorial_12_abstraction.png](../images/fairmat_tutorial_12_abstraction.png)
-
-![fairmat_tutorial_12_uml_metainfo.png](../images/fairmat_tutorial_12_uml_metainfo.png)
-
-
 
 
 Some images are snapshots from FAIRmat Tutorial 12 (https://www.youtube.com/watch?v=mc5kZjeF7KU)
