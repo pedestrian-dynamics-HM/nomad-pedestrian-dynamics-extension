@@ -9,4 +9,4 @@ plugins:
   include: 'parsers/example'
   options:
     parsers/example:
-      python_package: nomadparserexample
+      python_package: nomadparserexampleMY
