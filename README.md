@@ -5,10 +5,6 @@ This python package contains schema plug-ins and parser plug-ins (see [plugin_ty
 
 
 
-
-
-
-
 ## Structure of this repository
 
 Each parser and normalizer is realized as individual sub-package as shown in the FAIRmat Tutorial 9 (https://www.youtube.com/watch?v=hZZtxXMoSq8, 07:05 - 09:30).
