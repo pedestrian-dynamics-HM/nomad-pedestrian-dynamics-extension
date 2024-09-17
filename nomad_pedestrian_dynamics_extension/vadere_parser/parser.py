@@ -14,6 +14,8 @@ from nomad.datamodel.metainfo.plot import PlotSection, PlotlyFigure
 from nomad.datamodel.data import EntryData
 import plotly.express as px
 import plotly.graph_objs as go
+from openpyxl.styles.builtins import output
+from pandas.core.apply import relabel_result
 from plotly.subplots import make_subplots
 
 
@@ -75,6 +77,19 @@ mainfile_parser = TextParser(
     ]
 )
 
+class PedestrianTrajectoryParser(TextParser):
+
+    def __init__(self, **kwargs):
+        super().__init__()
+        self.units = None
+
+
+
+    def parse(self, key=None):
+        pass
+
+
+
 
 class JSONParser(FileParser):
     """
@@ -86,7 +101,6 @@ class JSONParser(FileParser):
 
     def __init__(self, mainfile: str = None, logger=None, **kwargs):
         super().__init__(mainfile, logger=logger, open=kwargs.get('open', None))
-
 
     @property
     def results(self):
@@ -127,14 +141,22 @@ class ExampleParserNEW:
             raise ValueError(f"In the simulation output directory there must be one scenario file. Files found: {scenario_filepath}")
 
         self.scenario_parser = JSONParser(scenario_filepath, self.logger)
-        filename = self.scenario_parser.get(key="release")
 
 
-        simulation = Simulation(
-            code_name='super_code', code_version=mainfile_parser.get('program_version')
-        )
-        date = datetime.datetime.strptime(mainfile_parser.date, '%Y/%m/%d')
-        simulation.date = date
+        vadere_release = self.scenario_parser.get(key="release")
+        simulation_start = datetime.datetime.strptime(mainfile_parser.date, '%Y/%m/%d')
+        simulation_finished = datetime.datetime.strptime(mainfile_parser.date, '%Y/%m/%d')
+        simulation = Simulation( software_name = "Vadere",
+                                 software_release = vadere_release,
+                                 date = simulation_start,
+                                 run_time = simulation_finished,
+                                 model = "33",
+                                 output = "vdb",
+          )
+
+
+
+
 
         for calculation in mainfile_parser.get('calculation', []):
             model = Model()

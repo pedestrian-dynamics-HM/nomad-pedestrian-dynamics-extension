@@ -1,4 +1,4 @@
-
+from xmlrpc.client import boolean
 
 import numpy as np
 from nomad.datamodel import ArchiveSection
@@ -8,38 +8,82 @@ from nomad.metainfo import Datetime, Package, Quantity, Reference, Section, SubS
 m_package = Package(name='vadere_nomadmetainfo_json', description='None')
 
 
+class PsychologyModel(ArchiveSection):
+
+    m_def = Section()
+
+    is_use_psychology_layer = Quantity(
+        type=boolean, description="""Use psychology models. If true the perception and cognition models are executed."""
+    )
+
+    perception_model = Quantity(
+        type=str, description="""Name of the perception model"""
+    )
+
+    cognition_model = Quantity(
+        type=str, description="""Name of the cognition model"""
+    )
+
+
+class LocomotionModel(ArchiveSection):
+
+    m_def = Section()
+
+    main_model = Quantity(
+        type=str, description="""Name of the main locomotion model"""
+    )
+
+    sub_model = Quantity(
+        type=str, description="""Name of the sub model"""
+    )
+
+
 class Model(ArchiveSection):
     m_def = Section()
 
-    n_atoms = Quantity(
-        type=np.int32, description="""Number of atoms in the model system."""
+    locomotion_model = SubSection(
+        type=LocomotionModel, repeats=True, description="""Locomotion model"""
     )
 
-    labels = Quantity(
-        type=str, shape=['n_atoms'], description="""Labels of the atoms."""
+    psychology_model = SubSection(
+        type=PsychologyModel, repeats=True, description="""Psychological model"""
     )
 
-    positions = Quantity(
-        type=np.float64, shape=['n_atoms', 3], description="""Positions of the atoms."""
-    )
-
-    lattice = Quantity(
+    time_step_size = Quantity(
         type=np.float64,
-        shape=[3, 3],
-        description="""Lattice vectors of the model system.""",
+        description="""Time between two evaluations of the simulation loop.""",
+        unit='s'
     )
 
-    locomotion_model = Quantity(
-        type = str, description="""Name of the locomotion model"""
+class Scenario(ArchiveSection):
+
+    m_def = Section()
+
+    number_of_sources = Quantity(
+        type = np.int64, description="""Number of sources where agents are spawned."""
     )
 
+    number_of_targets = Quantity(
+        type=np.int64, description="""Number of targets."""
+    )
+
+    dimensions = Quantity(
+        type=np.float64,
+        shape=[2] ,
+        description="""Outer dimension of the topography (width x height).""",
+        unit='m'
+    )
+
+    origin_destination_matrix = Quantity(
+        type=np.float64, shape=['number_of_sources', 'number_of_targets'], description="""Origin destination matrix."""
+    )
 
 
 class Output(ArchiveSection):
     m_def = Section()
 
     model = Quantity(
-        type=Reference(Model), description="""Reference to the model system."""
+        type=Reference(Model), description="""Reference to the model."""
     )
 
     energy = Quantity(
@@ -52,17 +96,23 @@ class Output(ArchiveSection):
 class Simulation(ArchiveSection):
     m_def = Section()
 
-    code_name = Quantity(
-        type=str, description="""Name of the code used for the simulation."""
+    software_name = Quantity(
+        type=str, description="""Name of the software used for the simulation."""
     )
 
-    code_version = Quantity(type=str, description="""Version of the code.""")
+    software_release = Quantity(type=str, description="""Software release.""")
 
-    date = Quantity(type=Datetime, description="""Execution date of the simulation.""")
+    date = Quantity(type=Datetime, description="""Start time of the execution.""")
 
-    model = SubSection(sub_section=Model, repeats=True)
+    run_time = Quantity(type=Datetime, description="""Run time of the the execution.""")
 
-    output = SubSection(sub_section=Output, repeats=True)
+    model = SubSection(sub_section=Model, repeats=True, description="""Simulation model.""")
+
+    output = SubSection(sub_section=Output, repeats=True, description="""Simulation output.""")
+
+
+
+
 
 
 # We extend the existing common definition of section Workflow
