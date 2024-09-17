@@ -54,8 +54,8 @@ def test_example():
     logger = Logger("test")
     data_path = os.path.join(os.path.dirname(__file__), "data", "example.out")
 
-    data_path = os.path.join(os.path.dirname(__file__), "data", "basic_2_density_discrete_ca_2024-08-05_12-33-49.69")
-    parser = ExampleParserNEW()
+    data_path = os.path.join(os.path.dirname(__file__), "data", "basic_2_density_discrete_ca_2024-08-05_12-33-49.69" , "postvis.traj")
+    parser = VadereParser()
     parser.parse(data_path, archive, logger)
 
     sim = archive.data

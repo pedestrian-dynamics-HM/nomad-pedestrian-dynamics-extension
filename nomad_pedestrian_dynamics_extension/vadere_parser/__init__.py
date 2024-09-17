@@ -1,1 +1,1 @@
-from .parser import *
+from nomad_pedestrian_dynamics_extension.vadere_parser.parser import VadereParser

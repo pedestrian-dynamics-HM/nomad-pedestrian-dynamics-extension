@@ -14,5 +14,8 @@ if __name__ == '__main__':
 
 
     archive = EntryArchive()
-    ExampleParserChristina().parse(sys.argv[1], archive, logging)
+
+    data_path = "/home/christina/repos/nomad-pedestrian-dynamics-extension/tests/data/basic_2_density_discrete_ca_2024-08-05_12-33-49.69/postvis.traj"
+
+    VadereParser().parse(data_path, archive, logging)
     json.dump(archive.m_to_dict(), sys.stdout, indent=2)

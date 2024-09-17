@@ -42,17 +42,22 @@ class Model(ArchiveSection):
     m_def = Section()
 
     locomotion_model = SubSection(
-        type=LocomotionModel, repeats=True, description="""Locomotion model"""
+        sub_section=LocomotionModel, description="""Locomotion model"""
     )
 
     psychology_model = SubSection(
-        type=PsychologyModel, repeats=True, description="""Psychological model"""
+        sub_section=PsychologyModel, description="""Psychological model"""
     )
 
     time_step_size = Quantity(
         type=np.float64,
         description="""Time between two evaluations of the simulation loop.""",
         unit='s'
+    )
+
+    seed = Quantity(
+        type = np.int64,
+        description="""Simulation seed""",
     )
 
 class Scenario(ArchiveSection):
@@ -82,14 +87,11 @@ class Scenario(ArchiveSection):
 class Output(ArchiveSection):
     m_def = Section()
 
-    model = Quantity(
-        type=Reference(Model), description="""Reference to the model."""
-    )
 
     energy = Quantity(
         type=np.float64,
         unit='eV',
-        description="""Value of the total energy of the system.""",
+        description="""Trajectories of the pedestrians.""",
     )
 
 
@@ -106,9 +108,9 @@ class Simulation(ArchiveSection):
 
     run_time = Quantity(type=Datetime, description="""Run time of the the execution.""")
 
-    model = SubSection(sub_section=Model, repeats=True, description="""Simulation model.""")
+    model = SubSection(sub_section=Model, description="""Simulation model.""")
 
-    output = SubSection(sub_section=Output, repeats=True, description="""Simulation output.""")
+    output = SubSection(sub_section=Output, description="""Simulation output.""")
 
 
 

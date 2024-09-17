@@ -1,5 +1,6 @@
 import io
 import os
+import re
 from logging import Logger
 
 import json
@@ -27,63 +28,15 @@ from nomad.datamodel.metainfo.workflow import Workflow
 from nomad.parsing.file_parser import Quantity, TextParser, FileParser
 from nomad.units import ureg as units
 
-from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Output, Simulation
+from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Output, Simulation, \
+    LocomotionModel, PsychologyModel
 
-
-
-
-def str_to_sites(string):
-    sym, pos = string.split('(')
-    pos = np.array(pos.split(')')[0].split(',')[:3], dtype=float)
-    return sym, pos
-
-
-
-calculation_parser = TextParser(
-    quantities=[
-        Quantity(
-            'sites',
-            r'([A-Z]\([\d\.\, \-]+\))',
-            str_operation=str_to_sites,
-            repeats=True,
-        ),
-        Quantity(
-            Model.lattice,
-            r'(?:latice|cell): \((\d)\, (\d), (\d)\)\,?\s*\((\d)\, (\d), (\d)\)\,?\s*\((\d)\, (\d), (\d)\)\,?\s*',  # noqa
-            repeats=False,
-        ),
-        Quantity('energy', r'energy: (\d\.\d+)'),
-        Quantity(
-            'magic_source',
-            r'done with magic source\s*\*{3}\s*\*{3}\s*[^\d]*(\d+)',
-            repeats=False,
-        ),
-    ]
-)
-
-
-
-
-mainfile_parser = TextParser(
-    quantities=[
-        Quantity('date', r'(\d\d\d\d\/\d\d\/\d\d)', repeats=False),
-        Quantity('program_version', r'super\_code\s*v(\d+)\s*', repeats=False),
-        Quantity(
-            'calculation',
-            r'\s*system \d+([\s\S]+?energy: [\d\.]+)([\s\S]+\*\*\*)*',
-            sub_parser=calculation_parser,
-            repeats=True,
-        ),
-    ]
-)
 
 class PedestrianTrajectoryParser(TextParser):
 
     def __init__(self, **kwargs):
         super().__init__()
         self.units = None
-
-
 
     def parse(self, key=None):
         pass
@@ -120,40 +73,70 @@ class JSONParser(FileParser):
 
 
 
-class ExampleParserNEW:
+class VadereParser:
 
     def __init__(self):
+
         self.logger = Logger("test")
-        self.scenario_parser = None
-        self.scenario_file_extension = ".scenario"
-        self.trajectory_file_extension = ".traj"
+        self.scenario_parser = JSONParser()
+        self.pedestrian_traj_parser = PedestrianTrajectoryParser()
+
+        self.simulation = Simulation(software_name = "Vadere")
+        self.model = Model()
+        self.locomotion_model = LocomotionModel()
+        self.psychology_model = PsychologyModel()
+
+        self.output = Output()
 
 
-    def parse(self, mainfile: str, archive: EntryArchive, logger):
-        # Log a hello world, just to get us started. TODO remove from an actual parser.
+    def init_parser(self, logger):
 
-        logger.info('Hello World')
-
-        scenario_filepath = glob.glob(f"{mainfile}/*{self.scenario_file_extension}")
+        # init scenario parser
+        scenario_filepath = glob.glob(f"{self.maindir}/*.scenario")
         if len(scenario_filepath) == 1:
             scenario_filepath = scenario_filepath[0]
         else:
-            raise ValueError(f"In the simulation output directory there must be one scenario file. Files found: {scenario_filepath}")
+            raise ValueError(
+                f"In the simulation output directory there must be one scenario file. Files found: {scenario_filepath}")
+        self.scenario_parser.mainfile = scenario_filepath
 
-        self.scenario_parser = JSONParser(scenario_filepath, self.logger)
+        # init trajectory parser
+        self.pedestrian_traj_parser.mainfile = os.path.join(self.maindir, 'postvis.traj')
 
 
-        vadere_release = self.scenario_parser.get(key="release")
-        simulation_start = datetime.datetime.strptime(mainfile_parser.date, '%Y/%m/%d')
-        simulation_finished = datetime.datetime.strptime(mainfile_parser.date, '%Y/%m/%d')
-        simulation = Simulation( software_name = "Vadere",
-                                 software_release = vadere_release,
-                                 date = simulation_start,
-                                 run_time = simulation_finished,
-                                 model = "33",
-                                 output = "vdb",
-          )
+    def parse_scenario_info(self):
 
+        if self.scenario_parser.get("processWriters").get('isTimestamped'):
+            day = re.search('\d{4}-\d{2}-\d{2}', self.maindir)
+            date = datetime.datetime.strptime(day.group(), '%Y-%m-%d').date()
+            self.simulation.date = date
+
+        self.simulation.software_release = self.scenario_parser.get("release")
+
+        self.model.time_step_size = self.scenario_parser.get("scenario").get("attributesSimulation").get('simTimeStepLength')
+        self.model.seed = self.scenario_parser.get("scenario").get("attributesSimulation").get('simulationSeed')
+
+
+        self.locomotion_model.main_model = self.scenario_parser.get("scenario").get("mainModel").split(".")[-1]
+
+
+        self.psychology_model.perception_model = self.scenario_parser.get("scenario").get("attributesSimulation").get('simulationSeed')
+
+        self.model.locomotion_model = self.locomotion_model
+        self.model.psychology_model = self.psychology_model
+        self.simulation.model = self.model
+
+
+
+
+    def parse(self, filepath: str, archive: EntryArchive, logger):
+
+        self.maindir = os.path.dirname(os.path.abspath(filepath))
+        self.init_parser(logger)
+
+        self.parse_scenario_info()
+
+        self.parse_output()
 
 
 
