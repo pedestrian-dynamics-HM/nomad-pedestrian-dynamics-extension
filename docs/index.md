@@ -26,5 +26,5 @@ pip install --upgrade pip
 pip install '.[dev]' --index-url https://gitlab.mpcdf.mpg.de/api/v4/projects/2187/packages/pypi/simple
 ```
 
-
+Additional requirements: fastapi, zipstream
 

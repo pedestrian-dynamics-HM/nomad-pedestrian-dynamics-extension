@@ -7,7 +7,7 @@ from nomad.datamodel import EntryArchive
 import sys
 
 
-from nomad_pedestrian_dynamics_extension.vadere_parser import ExampleParserChristina
+from nomad_pedestrian_dynamics_extension.vadere_parser import *
 
 
 def test_parser_2():
@@ -30,7 +30,7 @@ def test_parser_2():
 
     print("done")
 
-def test_matching():
+def test():
 
     test_file = os.path.join(
         os.path.dirname(__file__), 'data', 'test.example-format.txt'
@@ -46,3 +46,19 @@ def test_matching():
 
     # get the same data as JSON serializable Python dict
     python_dict = section_run.m_to_dict()
+
+
+
+def test_example():
+    archive = EntryArchive()
+    logger = Logger("test")
+    data_path = os.path.join(os.path.dirname(__file__), "data", "example.out")
+
+    data_path = os.path.join(os.path.dirname(__file__), "data", "basic_2_density_discrete_ca_2024-08-05_12-33-49.69")
+    parser = ExampleParserNEW()
+    parser.parse(data_path, archive, logger)
+
+    sim = archive.data
+    assert len(sim.model) == 2
+    assert len(sim.output) == 2
+    assert archive.workflow2.x_example_magic_value == 42

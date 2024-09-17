@@ -1,7 +1,6 @@
 
 
 import numpy as np
-from nomad.app.v1.models.models import description
 from nomad.datamodel import ArchiveSection
 from nomad.datamodel.metainfo.workflow import Workflow
 from nomad.metainfo import Datetime, Package, Quantity, Reference, Section, SubSection
