@@ -11,7 +11,7 @@ This is a collection of the NOMAD parsers for the following codes:
 
 
 This NOMAD plug-in is a fork of the (deprecated) NOMAD template: https://github.com/nomad-coe/nomad-parser-plugin-example
-After several changes this repository is similar to the following plug-in template: https://github.com/nomad-coe/nomad-parser-example/blob/master/pyproject.toml
+After several changes this repository is similar to the following plug-in template: https://github.com/nomad-coe/nomad-parser-example
 
 This python package contains schema plug-ins and parser plug-ins (see [plugin_types_and_data_processing.md](docs/concepts/plugin_types_and_data_processing.md) for an introduction to these plug-in types).
 

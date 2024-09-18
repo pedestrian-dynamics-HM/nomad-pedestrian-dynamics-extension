@@ -88,9 +88,9 @@ class Output(ArchiveSection):
     m_def = Section()
 
 
-    energy = Quantity(
+    position = Quantity(
         type=np.float64,
-        unit='eV',
+        shape=['1...*',3],
         description="""Trajectories of the pedestrians.""",
     )
 

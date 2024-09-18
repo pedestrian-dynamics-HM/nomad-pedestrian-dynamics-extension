@@ -102,8 +102,11 @@ class VadereParser:
         self.simulation.model = self.model
 
     def parse_trajectories(self):
-        # TODO: implement
-        pass
+
+        self.output.position = [ [1.0,0.0,0.0], [1.0,0.0,0.0] ]
+
+        self.simulation.output = self.output
+
 
     def parse(self, filepath: str, archive: EntryArchive, logger):
         self.maindir = os.path.dirname(os.path.abspath(filepath))
