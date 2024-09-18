@@ -1,32 +1,13 @@
-import io
+import os
+import datetime
+import glob
+import json
 import os
 import re
 from logging import Logger
 
-import json
-
-import glob
-import numpy as np
-from nomad.datamodel import EntryMetadata
-from nomad.metainfo import MSection, Quantity, Section
-
-
-from nomad.datamodel.metainfo.plot import PlotSection, PlotlyFigure
-from nomad.datamodel.data import EntryData
-import plotly.express as px
-import plotly.graph_objs as go
-from openpyxl.styles.builtins import output
-from pandas.core.apply import relabel_result
-from plotly.subplots import make_subplots
-
-
-import datetime
-
-import numpy as np
 from nomad.datamodel import EntryArchive
-from nomad.datamodel.metainfo.workflow import Workflow
-from nomad.parsing.file_parser import Quantity, TextParser, FileParser
-from nomad.units import ureg as units
+from nomad.parsing.file_parser import TextParser, FileParser
 
 from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Output, Simulation, \
     LocomotionModel, PsychologyModel
@@ -42,8 +23,6 @@ class PedestrianTrajectoryParser(TextParser):
         pass
 
 
-
-
 class JSONParser(FileParser):
     """
     Parser for JSON files.
@@ -57,7 +36,6 @@ class JSONParser(FileParser):
 
     @property
     def results(self):
-
         # TODO handle file
         if self._results is None:
             with open(self.mainfile, 'r') as file:
@@ -66,11 +44,10 @@ class JSONParser(FileParser):
         return self._results
 
     def parse(self, key):
-       """
-       no parsing necessary
-       """
-       return self
-
+        """
+        no parsing necessary
+        """
+        return self
 
 
 class VadereParser:
@@ -81,13 +58,12 @@ class VadereParser:
         self.scenario_parser = JSONParser()
         self.pedestrian_traj_parser = PedestrianTrajectoryParser()
 
-        self.simulation = Simulation(software_name = "Vadere")
+        self.simulation = Simulation(software_name="Vadere")
         self.model = Model()
         self.locomotion_model = LocomotionModel()
         self.psychology_model = PsychologyModel()
 
         self.output = Output()
-
 
     def init_parser(self, logger):
 
@@ -103,7 +79,6 @@ class VadereParser:
         # init trajectory parser
         self.pedestrian_traj_parser.mainfile = os.path.join(self.maindir, 'postvis.traj')
 
-
     def parse_scenario_info(self):
 
         if self.scenario_parser.get("processWriters").get('isTimestamped'):
@@ -113,75 +88,32 @@ class VadereParser:
 
         self.simulation.software_release = self.scenario_parser.get("release")
 
-        self.model.time_step_size = self.scenario_parser.get("scenario").get("attributesSimulation").get('simTimeStepLength')
+        self.model.time_step_size = self.scenario_parser.get("scenario").get("attributesSimulation").get(
+            'simTimeStepLength')
         self.model.seed = self.scenario_parser.get("scenario").get("attributesSimulation").get('simulationSeed')
-
 
         self.locomotion_model.main_model = self.scenario_parser.get("scenario").get("mainModel").split(".")[-1]
 
-
-        self.psychology_model.perception_model = self.scenario_parser.get("scenario").get("attributesSimulation").get('simulationSeed')
+        self.psychology_model.perception_model = self.scenario_parser.get("scenario").get("attributesSimulation").get(
+            'simulationSeed')
 
         self.model.locomotion_model = self.locomotion_model
         self.model.psychology_model = self.psychology_model
         self.simulation.model = self.model
 
-
-
+    def parse_trajectories(self):
+        # TODO: implement
+        pass
 
     def parse(self, filepath: str, archive: EntryArchive, logger):
-
         self.maindir = os.path.dirname(os.path.abspath(filepath))
         self.init_parser(logger)
-
+        logger.info("Start parsing scenario file")
         self.parse_scenario_info()
+        logger.info("Start parsing trajectory file")
+        self.parse_trajectories()
+        archive.data = self.simulation
 
-        self.parse_output()
-
-
-
-
-        for calculation in mainfile_parser.get('calculation', []):
-            model = Model()
-
-            model.lattice = calculation.get('lattice_vectors')
-            sites = calculation.get('sites')
-            model.labels = [site[0] for site in sites]
-            model.positions = [site[1] for site in sites]
-            simulation.model.append(model)
-
-            output = Output()
-            output.model = model
-            output.energy = calculation.get('energy') * units.eV
-            magic_source = calculation.get('magic_source')
-            if magic_source is not None:
-                archive.workflow2 = Workflow(x_example_magic_value=magic_source)
-            simulation.output.append(output)
-        # put the simulation section into archive data
-        archive.data = simulation
-
-
-#############################################################
-# class ExampleSection(MSection):
-#     pattern = Quantity(type=np.float64, shape=['*', '3'])
-#
-#
-#
-# class ExampleParserChristina:
-#
-#     def parse(self, mainfile, archive, logger):
-#         logger.info('parsing started.')
-#
-#         with open(mainfile) as f:
-#             data = f.readlines()
-#
-#         archive.metadata = EntryMetadata(external_id=data[0][1:])
-#         archive.data = ExampleSection()
-#         archive.data.pattern = [
-#             [float(number) for number in line.split(' ')] for line in data[1:]
-#         ]
-
-#
 # class CustomSection(PlotSection, EntryData):
 #     m_def = Section()
 #     time = Quantity(type=float, shape=['*'], unit='s', a_eln=dict(component='NumberEditQuantity'))
