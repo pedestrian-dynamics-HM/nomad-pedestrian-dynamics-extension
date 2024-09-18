@@ -9,6 +9,9 @@ from logging import Logger
 from nomad.datamodel import EntryArchive
 from nomad.parsing.file_parser import FileParser, DataTextParser
 
+from nomad.parsing import MatchingParser
+
+
 from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Output, Simulation, \
     LocomotionModel, PsychologyModel
 
@@ -51,10 +54,11 @@ class JSONParser(FileParser):
         return self
 
 
-class VadereParser:
+class VadereParser(MatchingParser):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
 
+        super().__init__(**kwargs)
         self.logger = Logger("test")
         self.scenario_parser = JSONParser()
         self.pedestrian_traj_parser = PedestrianTrajectoryParser()
