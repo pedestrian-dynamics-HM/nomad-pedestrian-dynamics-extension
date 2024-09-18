@@ -6,11 +6,7 @@ import os
 import re
 from logging import Logger
 
-from nomad.datamodel import EntryArchive
 from nomad.parsing.file_parser import FileParser, DataTextParser
-
-from nomad.parsing import MatchingParser
-
 
 from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Output, Simulation, \
     LocomotionModel, PsychologyModel
@@ -54,11 +50,10 @@ class JSONParser(FileParser):
         return self
 
 
-class VadereParser(MatchingParser):
+class VadereParser:
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
 
-        super().__init__(**kwargs)
         self.logger = Logger("test")
         self.scenario_parser = JSONParser()
         self.pedestrian_traj_parser = PedestrianTrajectoryParser()
@@ -113,7 +108,7 @@ class VadereParser(MatchingParser):
         self.simulation.output = self.output
 
 
-    def parse(self, filepath: str, archive: EntryArchive, logger):
+    def parse(self, filepath, archive, logger):
         self.maindir = os.path.dirname(os.path.abspath(filepath))
         self.init_parser(logger)
         logger.info("Start parsing scenario file")
