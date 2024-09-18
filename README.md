@@ -1,12 +1,24 @@
 # NOMAD's pedestrian dynamics extension (PedDyn-ext)
-This NOMAD plug-in is a fork of the NOMAD template: https://github.com/nomad-coe/nomad-parser-plugin-example
+
+
+This is a collection of the NOMAD parsers for the following codes:
+- [Vadere](https://www.vadere.org)
+
+
+
+
+## Structure
+
+
+This NOMAD plug-in is a fork of the (deprecated) NOMAD template: https://github.com/nomad-coe/nomad-parser-plugin-example
+After several changes this repository is similar to the following plug-in template: https://github.com/nomad-coe/nomad-parser-example/blob/master/pyproject.toml
 
 This python package contains schema plug-ins and parser plug-ins (see [plugin_types_and_data_processing.md](docs/concepts/plugin_types_and_data_processing.md) for an introduction to these plug-in types).
 
 
+The structure of the Python packages is similiar to https://github.com/nomad-coe/electronic-parsers
 
-## Structure of this repository
-
+### deprecated:
 Each parser and normalizer is realized as individual sub-package as shown in the FAIRmat Tutorial 9 (https://www.youtube.com/watch?v=hZZtxXMoSq8, 07:05 - 09:30).
 Each sub-package contains a `nomad_plugin.yaml` file that contains the metadata of the plug-in.
 

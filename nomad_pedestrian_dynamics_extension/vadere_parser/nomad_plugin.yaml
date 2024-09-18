@@ -1,8 +1,17 @@
-plugin_type: parser
-name: parsers/example
-description: |
-  This is a simple hello world parser. This is meant as a template. Fork the github
-  project to create your own parser.
-mainfile_name_re: ^.*\.example-format\.txt$
-parser_class_name: vadere_parser.ExampleParser
-code_name: Example code
+code_category: Pedestrian dynamics code
+code_homepage: https://www.vadere.org
+code_name: Vadere
+metadata:
+  codeCategory: Atomistic code
+  codeLabel: Vadere
+  codeLabelStyle: all in capitals
+  codeName: Vadere
+  codeUrl: https://www.vadere.org
+  parserGitUrl: https://github.com/pedestrian-dynamics-HM/nomad-pedestrian-dynamics-extension
+  preamble: ''
+  status: production
+  tableOfFiles: ''
+name: parsers/vadere
+parser_class_name: nomad_pedestrian_dynamics_extension.vadere_parser.parser.VadereParser
+python_package: nomad_pedestrian_dynamics_extension.vadere_parser
+plugin_source_code_url: https://github.com/pedestrian-dynamics-HM/nomad-pedestrian-dynamics-extension/tree/main/nomad_pedestrian_dynamics_extension/vadere_parser
