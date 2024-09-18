@@ -10,8 +10,7 @@ readme = "README.md"
 authors = [{ name = "Christina Maria Mayr" }]
 license = { file = "LICENSE" }
 dependencies = [
-    "nomad-lab",
-    "lxml_html_clean"
+    "nomad-lab"
 ]
 
 [project.urls]
