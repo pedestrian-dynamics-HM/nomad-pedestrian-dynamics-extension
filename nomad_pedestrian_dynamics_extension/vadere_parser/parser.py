@@ -8,8 +8,7 @@ from logging import Logger
 
 from nomad.parsing.file_parser import FileParser, DataTextParser
 
-from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Output, Simulation, \
-    LocomotionModel, PsychologyModel
+from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Output, Simulation, PsychologyModel
 
 
 class PedestrianTrajectoryParser(DataTextParser):
@@ -60,9 +59,8 @@ class VadereParser:
 
         self.simulation = Simulation(software_name="Vadere")
         self.model = Model()
-        self.locomotion_model = LocomotionModel()
-        self.psychology_model = PsychologyModel()
 
+        self.psychology_model = PsychologyModel()
         self.output = Output()
 
     def init_parser(self, logger):
@@ -81,30 +79,31 @@ class VadereParser:
 
     def parse_scenario_info(self):
 
+        # store data in simulation object
+        self.simulation.software_release = self.scenario_parser.get("release")
         if self.scenario_parser.get("processWriters").get('isTimestamped'):
             day = re.search('\d{4}-\d{2}-\d{2}', self.maindir)
             date = datetime.datetime.strptime(day.group(), '%Y-%m-%d').date()
             self.simulation.date = date
 
-        self.simulation.software_release = self.scenario_parser.get("release")
+        # store data in simulation object
+        if self.scenario_parser.get("scenario").get("attributesPsychology").get("usePsychologyLayer"):
+            self.psychology_model.perception_model = self.scenario_parser.get("scenario").get("attributesPsychology").get("psychologyLayer").get("perception")
+            self.psychology_model.cognition_model = self.scenario_parser.get("scenario").get("attributesPsychology").get("psychologyLayer").get("cognition")
 
+
+        self.model.locomotion_model = self.scenario_parser.get("scenario").get("mainModel").split(".")[-1]
+        self.model.psychology_model = self.psychology_model
         self.model.time_step_size = self.scenario_parser.get("scenario").get("attributesSimulation").get(
             'simTimeStepLength')
         self.model.seed = self.scenario_parser.get("scenario").get("attributesSimulation").get('simulationSeed')
 
-        self.locomotion_model.main_model = self.scenario_parser.get("scenario").get("mainModel").split(".")[-1]
-
-        self.psychology_model.perception_model = self.scenario_parser.get("scenario").get("attributesSimulation").get(
-            'simulationSeed')
-
-        self.model.locomotion_model = self.locomotion_model
-        self.model.psychology_model = self.psychology_model
         self.simulation.model = self.model
 
     def parse_trajectories(self):
 
         self.pedestrian_traj_parser.parse()
-        self.output.position = [ [1.0,0.0,0.0], [1.0,0.0,0.0] ]
+        self.output.position = [ [1.0,0.0,0.0], [2.0,0.0,0.0], [3.0,0.0,0.0], [4.0,0.0,0.0] ]
         self.simulation.output = self.output
 
 

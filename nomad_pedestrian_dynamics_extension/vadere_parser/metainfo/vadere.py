@@ -1,3 +1,4 @@
+from email.policy import default
 from xmlrpc.client import boolean
 
 import numpy as np
@@ -12,9 +13,6 @@ class PsychologyModel(ArchiveSection):
 
     m_def = Section()
 
-    is_use_psychology_layer = Quantity(
-        type=boolean, description="""Use psychology models. If true the perception and cognition models are executed."""
-    )
 
     perception_model = Quantity(
         type=str, description="""Name of the perception model"""
@@ -25,24 +23,12 @@ class PsychologyModel(ArchiveSection):
     )
 
 
-class LocomotionModel(ArchiveSection):
-
-    m_def = Section()
-
-    main_model = Quantity(
-        type=str, description="""Name of the main locomotion model"""
-    )
-
-    sub_model = Quantity(
-        type=str, description="""Name of the sub model"""
-    )
-
 
 class Model(ArchiveSection):
     m_def = Section()
 
-    locomotion_model = SubSection(
-        sub_section=LocomotionModel, description="""Locomotion model"""
+    locomotion_model = Quantity(
+        type=str, description="""Locomotion model"""
     )
 
     psychology_model = SubSection(
@@ -105,8 +91,6 @@ class Simulation(ArchiveSection):
     software_release = Quantity(type=str, description="""Software release.""")
 
     date = Quantity(type=Datetime, description="""Start time of the execution.""")
-
-    run_time = Quantity(type=Datetime, description="""Run time of the the execution.""")
 
     model = SubSection(sub_section=Model, description="""Simulation model.""")
 

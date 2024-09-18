@@ -24,7 +24,7 @@ def test_vadere_parser_without_matching():
 def test_entry_point_configuration():
     """
     Tests whether the correct parser is selected depending on the mainfile and the matching criteria.
-    This requires that the entry point is correctly specified in pyproject.toml and nomad_pedestrian_dynamics_extension/__init__ 
+    This requires that the entry point is correctly specified in pyproject.toml and nomad_pedestrian_dynamics_extension/__init__
     """
 
     data_path = os.path.join(os.path.dirname(__file__), "data", "basic_2_density_discrete_ca_2024-08-05_12-33-49.69" , "postvis.traj")
