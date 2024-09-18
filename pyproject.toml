@@ -11,9 +11,6 @@ authors = [{ name = "Christina Maria Mayr" }]
 license = { file = "LICENSE" }
 dependencies = [
     "nomad-lab",
-    "nomad-schema-plugin-simulation-workflow",
-    "nomad-schema-plugin-run",
-    "nomad-parser-plugins-simulation",
     "lxml>=5.2",
     "netCDF4==1.6.5",
     "h5py>=3.6.0",
