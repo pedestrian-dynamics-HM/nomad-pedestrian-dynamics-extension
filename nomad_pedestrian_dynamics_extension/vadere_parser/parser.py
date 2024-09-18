@@ -7,20 +7,21 @@ import re
 from logging import Logger
 
 from nomad.datamodel import EntryArchive
-from nomad.parsing.file_parser import TextParser, FileParser
+from nomad.parsing.file_parser import FileParser, DataTextParser
 
 from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Output, Simulation, \
     LocomotionModel, PsychologyModel
 
 
-class PedestrianTrajectoryParser(TextParser):
+class PedestrianTrajectoryParser(DataTextParser):
 
-    def __init__(self, **kwargs):
+    def __init__(self, mainfile: str = None, logger=None, **kwargs):
         super().__init__()
-        self.units = None
 
     def parse(self, key=None):
-        pass
+
+        print("Try to parse")
+
 
 
 class JSONParser(FileParser):
@@ -103,8 +104,8 @@ class VadereParser:
 
     def parse_trajectories(self):
 
+        self.pedestrian_traj_parser.parse()
         self.output.position = [ [1.0,0.0,0.0], [1.0,0.0,0.0] ]
-
         self.simulation.output = self.output
 
 

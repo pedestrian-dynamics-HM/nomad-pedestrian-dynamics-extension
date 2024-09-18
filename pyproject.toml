@@ -10,10 +10,10 @@ readme = "README.md"
 authors = [{ name = "Christina Maria Mayr" }]
 license = { file = "LICENSE" }
 dependencies = [
-    "nomad-lab>=1.3.6.dev1",
-    "nomad-schema-plugin-simulation-workflow>=1.0.1",
-    "nomad-schema-plugin-run>=1.0.1",
-    "nomad-parser-plugins-simulation>=1.0.2",
+    "nomad-lab",
+    "nomad-schema-plugin-simulation-workflow",
+    "nomad-schema-plugin-run",
+    "nomad-parser-plugins-simulation",
     "lxml>=5.2",
     "netCDF4==1.6.5",
     "h5py>=3.6.0",
