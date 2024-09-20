@@ -131,7 +131,7 @@ class MacroscopicResults(ArchiveSection):
         description="""DUMMY.""",
     )
 
-class VadereProperties(Property):
+class VadereProperties(ArchiveSection):
 
     m_def = Section()
 
@@ -141,8 +141,12 @@ class VadereProperties(Property):
     )
 
 
+    def normalize(self, archive, logger):
+        pass
 
-class VadereResults(ArchiveSection,Results):
+
+
+class VadereResults(Results):
 
     m_def = Section()
 
@@ -151,9 +155,7 @@ class VadereResults(ArchiveSection,Results):
         description="""DUMMY.""",
     )
 
-
     properties = SubSection(sub_section=VadereProperties, description="""scenario specific properties""")
-
 
     microscopic_results = SubSection(sub_section=MicroscopicResults,description="""Microscopic results such as trajectories.""")
 
