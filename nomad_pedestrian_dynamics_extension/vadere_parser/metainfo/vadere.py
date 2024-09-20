@@ -1,7 +1,9 @@
 
 import numpy as np
-from nomad.datamodel import ArchiveSection, Results
+from nomad.datamodel import ArchiveSection
 from nomad.datamodel.metainfo.workflow import Workflow
+from nomad.datamodel.results import Properties
+from nomad.datamodel.results import Results
 from nomad.metainfo import Datetime, Package, Quantity,  Section, SubSection, MSection
 
 m_package = Package(name='vadere_nomadmetainfo_json', description='None')
@@ -128,24 +130,23 @@ class MacroscopicResults(ArchiveSection):
         description="""DUMMY.""",
     )
 
-class VadereProperties(ArchiveSection):
+class VadereProperties(Properties):
 
-    m_def = Section()
+    m_def = Section(extends_base_section=False)
 
     total_number_of_pedestrians = Quantity(
-        type=np.float64,
+        type=np.int64,
         description="""Total number of pedestrians in the simulation""",
     )
 
-
-    def normalize(self, archive, logger):
-        pass
+    #def normalize(self, archive, logger):
+      #  pass
 
 
 
 class VadereResults(Results):
-    
-    m_def = Section(extends_base_section=False)
+
+    m_def = Section()
 
     testdata33 = Quantity(
         type=np.float64,

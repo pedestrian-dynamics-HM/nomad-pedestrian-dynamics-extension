@@ -6,6 +6,7 @@ import os
 import re
 from logging import Logger
 
+from nomad.parsing import MatchingParser
 from nomad.parsing.file_parser import FileParser, DataTextParser
 
 from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Output, Simulation, \
@@ -50,7 +51,7 @@ class JSONParser(FileParser):
         return self
 
 
-class VadereParser:
+class VadereParser(MatchingParser):
 
     def __init__(self):
 
@@ -109,9 +110,11 @@ class VadereParser:
         self.output.position = [ [1.0,0.0,0.0], [2.0,0.0,0.0], [3.0,0.0,0.0], [4.0,0.0,0.0] ]
         self.simulation.output = self.output
 
-        self.results.microscopic_results=  MicroscopicResults()
-        self.results.macroscopic_results = MacroscopicResults()
-        self.results.properties = VadereProperties()
+        self.results.m_create(MicroscopicResults)
+        self.results.m_create(MacroscopicResults)
+        self.results.m_create(VadereProperties)
+
+        self.results.properties.total_number_of_pedestrians = 234
 
         self.results.microscopic_results.trajectories = [[1.0, 0.0, 0.0], [2.0, 0.0, 0.0], [1,2,3]]
         self.results.microscopic_results.testdata1 = 14.5
