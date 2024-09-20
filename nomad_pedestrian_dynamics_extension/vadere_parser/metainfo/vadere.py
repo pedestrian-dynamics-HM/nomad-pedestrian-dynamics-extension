@@ -3,6 +3,7 @@ from xmlrpc.client import boolean
 
 import numpy as np
 from nomad.datamodel import ArchiveSection, Results
+from nomad.datamodel.metainfo.simulation.workflow import Property
 from nomad.datamodel.metainfo.workflow import Workflow
 from nomad.metainfo import Datetime, Package, Quantity, Reference, Section, SubSection, MSection
 
@@ -130,7 +131,7 @@ class MacroscopicResults(ArchiveSection):
         description="""DUMMY.""",
     )
 
-class VadereProperties(MSection):
+class VadereProperties(Property):
 
     m_def = Section()
 
