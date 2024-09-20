@@ -123,13 +123,12 @@ class MicroscopicResults(ArchiveSection):
 
 
 
-class CustomSection(PlotSection, EntryData):
+class CustomSection(PlotSection):
     m_def = Section(validate=True)
 
     sample_id = Quantity(type=np.int64, default=1, a_eln=dict(component="NumberEditQuantity",minValue=1))
 
     def normalize(self, archive, logger):
-
 
         logger.info(f"Sample id arrived at normalizer in custom section: {self.sample_id}")
 
