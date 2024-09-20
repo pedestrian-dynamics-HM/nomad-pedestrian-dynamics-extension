@@ -1,11 +1,8 @@
-from email.policy import default
-from xmlrpc.client import boolean
 
 import numpy as np
 from nomad.datamodel import ArchiveSection, Results
-from nomad.datamodel.metainfo.simulation.workflow import Property
 from nomad.datamodel.metainfo.workflow import Workflow
-from nomad.metainfo import Datetime, Package, Quantity, Reference, Section, SubSection, MSection
+from nomad.metainfo import Datetime, Package, Quantity,  Section, SubSection, MSection
 
 m_package = Package(name='vadere_nomadmetainfo_json', description='None')
 
@@ -147,8 +144,8 @@ class VadereProperties(ArchiveSection):
 
 
 class VadereResults(Results):
-
-    m_def = Section()
+    
+    m_def = Section(extends_base_section=False)
 
     testdata33 = Quantity(
         type=np.float64,
