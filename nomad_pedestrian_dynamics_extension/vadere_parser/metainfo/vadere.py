@@ -123,22 +123,14 @@ class MicroscopicResults(ArchiveSection):
 
 
 
-
-
 class CustomSection(PlotSection, EntryData):
     m_def = Section()
-    #time = Quantity(type=float, shape=['*'], unit='s', a_eln=dict(component='NumberEditQuantity'))
-    #substrate_temperature = Quantity(type=float, shape=['*'], unit='K', a_eln=dict(component='NumberEditQuantity'))
-    #chamber_pressure = Quantity(type=float, shape=['*'], unit='Pa', a_eln=dict(component='NumberEditQuantity'))
-
 
     def normalize(self, archive, logger):
         super(CustomSection, self).normalize(archive, logger)
 
         time = [1, 2, 3, 4, 5, 6, 7, 8]
-
         chamber_pressure = [4, 5, 5, 5, 6, 2, 0, 1]
-
         substrate_temperature = [0, 0, 5, 0, 0, 2, 0, 1]
 
         first_line = px.scatter(x=time, y=substrate_temperature)
