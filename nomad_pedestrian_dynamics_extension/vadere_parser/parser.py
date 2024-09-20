@@ -67,7 +67,8 @@ class VadereParser:
         self.psychology_model = PsychologyModel()
         self.output = Output()
         self.logger.info("PARSER - init Create new Vadere results because of initalization")
-        self.results = VadereResults()
+        self.results = None
+
 
     def init_parser(self, logger):
 
@@ -112,15 +113,17 @@ class VadereParser:
         self.output.position = [ [1.0,0.0,0.0], [2.0,0.0,0.0], [3.0,0.0,0.0], [4.0,0.0,0.0] ]
         self.simulation.output = self.output
 
-        self.results.m_create(MicroscopicResults)
-        self.results.m_create(MacroscopicResults)
+        if self.results is None:
 
-        if self.results.macroscopic_results.densities is None:
             logger.info("PARSER: create section because it does not exist")
+            self.results = VadereResults()
+            self.results.m_create(MicroscopicResults)
+            self.results.m_create(MacroscopicResults)
             self.results.macroscopic_results.m_create(CustomSection)
         else:
             logger.info("PARSER: only update the section")
-            self.results.macroscopic_results.m_update()
+            ##self.results.m_update()
+            ## self.results.macroscopic_results.m_update()
 
 
         self.results.m_create(VadereProperties)
