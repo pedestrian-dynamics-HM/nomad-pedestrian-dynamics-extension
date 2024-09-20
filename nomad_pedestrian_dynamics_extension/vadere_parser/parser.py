@@ -114,7 +114,10 @@ class VadereParser(MatchingParser):
         self.results.m_create(MacroscopicResults)
         self.results.macroscopic_results.m_create(CustomSection)
         logger.info("PARSER: set id = 2")
-        self.results.macroscopic_results.densities.sample_id = 2
+
+       # if self.results.macroscopic_results.densities.sample_id is None:
+          #  print()
+
 
         self.results.m_create(VadereProperties)
 
