@@ -7,20 +7,44 @@ import re
 from logging import Logger
 
 import numpy as np
+import pandas
 from nomad.parsing.file_parser import FileParser, DataTextParser
 
 from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Output, Simulation, \
-    PsychologyModel, VadereResults, MacroscopicResults, MicroscopicResults, VadereProperties, DensitiesAndVelocities
+    PsychologyModel, VadereResults, MacroscopicResults, MicroscopicResults, VadereProperties, DensitiesAndVelocities, Trajectories
 
 
-class PedestrianTrajectoryParser(DataTextParser):
+class PedestrianTrajectoryParser(FileParser):
 
     def __init__(self, mainfile: str = None, logger=None, **kwargs):
-        super().__init__()
+        super().__init__(mainfile, logger=logger, open=kwargs.get('open', None))
 
-    def parse(self, key=None):
+    @property
+    def results(self):
+        if self._results is None:
+            aaa = pandas.read_csv(self.mainfile, sep = " ",)
 
-        print("Try to parse")
+            self._results = aaa
+
+        return self._results
+
+    def parse(self, **kwargs):
+        """
+        no parsing necessary
+        :param **kwargs:
+        """
+        return self
+
+    def get_trajectories(self):
+        traj = pandas.read_csv(self.mainfile, sep=" ", usecols=[0,1,2,3])
+
+        traj.columns.values[0] = "pedestrian_id"
+        traj.columns.values[1] = "time"
+        traj.columns.values[2] = "position_x"
+        traj.columns.values[3] = "position_y"
+        return traj
+
+
 
 
 
@@ -111,15 +135,33 @@ class VadereParser:
 
     def parse_trajectories(self, archive, logger):
 
-        self.pedestrian_traj_parser.parse()
-        self.output.position = [ [1.0,0.0,0.0], [2.0,0.0,0.0], [3.0,0.0,0.0], [4.0,0.0,0.0] ]
-        self.simulation.output = self.output
-
+        trajectories__ = self.pedestrian_traj_parser.get_trajectories()
 
         self.results = VadereResults()
         self.results.m_create(MicroscopicResults)
         self.results.m_create(MacroscopicResults)
         self.results.macroscopic_results.m_create(DensitiesAndVelocities)
+
+        for ped, traj in trajectories__.groupby(by="pedestrian_id"):
+
+            trajectory = Trajectories()
+            trajectory.pedestrian_id = ped
+            trajectory.time = traj["time"].values
+            trajectory.x_position = traj["position_x"].values
+            trajectory.y_position = traj["position_y"].values
+
+            if len(self.results.microscopic_results.trajectories) == 0:
+                self.results.microscopic_results.trajectories = [trajectory]
+            else:
+                self.results.microscopic_results.trajectories.append(trajectory)
+
+
+
+        self.output.position = [ [1.0,0.0,0.0], [2.0,0.0,0.0], [3.0,0.0,0.0], [4.0,0.0,0.0] ]
+        self.simulation.output = self.output
+
+
+
 
         time_interval = self.results.macroscopic_results.temporal_resolution.magnitude
 
@@ -129,6 +171,7 @@ class VadereParser:
 
         for evaluation_time in evaluation_times:
             densities_and_velocities = DensitiesAndVelocities()
+            densities_and_velocities.time = evaluation_time
             densities_and_velocities.velocities = [[1,2,3],[1,2,3],[1,2,3]]
             densities_and_velocities.densities = [[1, 1, 1], [2, 2, 2], [3, 3, 3]]
             self.results.macroscopic_results.densities_and_velocities.append(densities_and_velocities)
@@ -136,7 +179,6 @@ class VadereParser:
 
         self.results.m_create(VadereProperties)
         self.results.properties.total_number_of_pedestrians = 234
-        self.results.microscopic_results.trajectories = [[1.0, 0.0, 0.0], [2.0, 0.0, 0.0], [1,2,3]]
         self.results.microscopic_results.testdata1 = 14.5
 
         archive.results = self.results
