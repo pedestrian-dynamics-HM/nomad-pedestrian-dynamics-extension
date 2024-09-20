@@ -153,8 +153,6 @@ class DensitiesAndVelocities(PlotSection):
 
     def normalize(self, archive, logger):
 
-        logger.info(f"Sample id arrived at normalizer in custom section: {self.sample_id}")
-
         super(DensitiesAndVelocities, self).normalize(archive, logger)
 
         heatmap = go.Heatmap(z=self.densities, showscale=False, connectgaps=True, zsmooth='best')

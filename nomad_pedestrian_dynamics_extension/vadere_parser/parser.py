@@ -121,7 +121,6 @@ class VadereParser:
         self.results.m_create(MacroscopicResults)
         self.results.macroscopic_results.m_create(DensitiesAndVelocities)
 
-        self.simulation.total_simulation_time
         time_interval = self.results.macroscopic_results.temporal_resolution.magnitude
 
         evaluation_times = np.arange(start=0, stop= self.simulation.total_simulation_time, step= time_interval)
