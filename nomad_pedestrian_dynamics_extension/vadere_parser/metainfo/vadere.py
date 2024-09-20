@@ -45,10 +45,7 @@ class Model(ArchiveSection):
         unit='s'
     )
 
-    seed = Quantity(
-        type = np.int64,
-        description="""Simulation seed""",
-    )
+
 
 class Scenario(ArchiveSection):
 
@@ -100,11 +97,20 @@ class Simulation(ArchiveSection):
 
     output = SubSection(sub_section=Output, description="""Simulation output.""")
 
+    seed = Quantity(type = np.int64, description="""Simulation seed""",
+    )
+
+    total_simulation_time = Quantity(
+        type = np.float64,
+        description="""Total simulation time""",
+    )
+
+
+
 
 class MicroscopicResults(ArchiveSection):
 
     m_def = Section()
-
 
 
     trajectories = Quantity(
@@ -123,59 +129,70 @@ class MicroscopicResults(ArchiveSection):
 
 
 
-class CustomSection(PlotSection):
-    m_def = Section(validate=True)
+class DensitiesAndVelocities(PlotSection):
 
-    sample_id = Quantity(type=np.int64, default=1, a_eln=dict(component="NumberEditQuantity",minValue=1))
+    m_def = Section()
+
+    time = Quantity(
+        type=np.float64,
+        description="""Point of time""",
+    )
+
+    densities = Quantity(
+        type=np.float64,
+        shape=['1...*', '1...*'],
+        description="""Densities""",
+    )
+
+    velocities = Quantity(
+        type=np.float64,
+        shape=['1...*', '1...*' ],
+        description="""Velocities""",
+    )
+
 
     def normalize(self, archive, logger):
 
         logger.info(f"Sample id arrived at normalizer in custom section: {self.sample_id}")
 
-        super(CustomSection, self).normalize(archive, logger)
+        super(DensitiesAndVelocities, self).normalize(archive, logger)
 
-        time = [1, 2, 3, 4, 5, 6, 7, 8]
-        chamber_pressure = [1, 1, 1, self.sample_id, 1, 1, 1, 1]
-        substrate_temperature = time
+        heatmap = go.Heatmap(z=self.densities, showscale=False, connectgaps=True, zsmooth='best')
+        figure1 = go.Figure(data=heatmap)
+        figure_json = figure1.to_plotly_json()
+        self.figures.append(PlotlyFigure(label='Density', index=0, figure=figure_json))
 
-        first_line = px.scatter(x=time, y=substrate_temperature)
-        second_line = px.scatter(x=time, y=chamber_pressure)
-        figure1 = make_subplots(rows=1, cols=2, shared_yaxes=True)
-        figure1.add_trace(first_line.data[0], row=1, col=1)
-        figure1.add_trace(second_line.data[0], row=1, col=2)
-        figure1.update_layout(height=400, width=716, title_text="Creating Subplots in Plotly")
-        self.figures.append(PlotlyFigure(label='figure 1', figure=figure1.to_plotly_json()))
+        heatmap = go.Heatmap(z=self.velocities, showscale=False, connectgaps=True, zsmooth='best')
+        figure2 = go.Figure(data=heatmap)
+        figure_json = figure2.to_plotly_json()
 
-        figure2 = px.scatter(x=substrate_temperature, y=chamber_pressure, color=chamber_pressure, title="Chamber as a function of Temperature")
-        self.figures.append(PlotlyFigure(label='figure 2', index=1, figure=figure2.to_plotly_json()))
-
-        heatmap_data = [[None, None, None, 12, 13, 14, 15, 16],
-             [None, 1, None, 11, None, None, None, 17],
-             [None, 2, 6, 7, None, None, None, 18],
-             [None, 3, None, 8, None, None, None, 19],
-             [5, 4, 10, 9, None, None, None, 20],
-             [None, None, None, 27, None, None, None, 21],
-             [None, None, None, 26, 25, 24, 23, 22]]
-
-        heatmap = go.Heatmap(z=heatmap_data, showscale=False, connectgaps=True, zsmooth='best')
-        figure3 = go.Figure(data=heatmap)
-        figure_json = figure3.to_plotly_json()
-        figure_json['config'] = {'staticPlot': False}
-
-        self.figures.append(PlotlyFigure(label='figure 3', index=0, figure=figure_json))
+        self.figures.append(PlotlyFigure(label='Velocity', index=1, figure=figure_json))
 
 
 class MacroscopicResults(ArchiveSection):
+
     m_def = Section()
 
-    densities = SubSection(
-            sub_section=CustomSection
+    spatial_resolution = Quantity(
+        type=np.float64,
+        description="""Spatial resolution corresponds to the side length of a cell. Default: 2""",
+        default=2,
+        unit="m"
     )
 
-    testdata2= Quantity(
+    temporal_resolution = Quantity(
         type=np.float64,
-        description="""DUMMY.""",
+        description="""Temporal resolution corresponds to temporal resolution""",
+        default=0.4,
+        unit="s"
     )
+
+    densities_and_velocities = SubSection(
+        sub_section = DensitiesAndVelocities,
+        repeats=True
+    )
+
+
 
 class VadereProperties(Properties):
 
@@ -184,48 +201,27 @@ class VadereProperties(Properties):
     total_number_of_pedestrians = Quantity(
         type=np.int64,
         description="""Total number of pedestrians in the simulation""",
+        default=0
     )
 
-    #def normalize(self, archive, logger):
-      #  pass
-
-
-
-
-
+    max_number_of_pedestrians = Quantity(
+        type=np.int64,
+        description="""Maximum number of pedestrians in the simulation. Corresponds the total number in case of a one time spawning""",
+        default=0
+    )
 
 
 class VadereResults(Results):
 
     m_def = Section()
 
-    testdata33 = Quantity(
-        type=np.float64,
-        description="""DUMMY.""",
-    )
-
-    properties = SubSection(sub_section=VadereProperties, description="""scenario specific properties""")
+    properties = SubSection(sub_section=VadereProperties, description="""Scenario specific properties""")
 
     microscopic_results = SubSection(sub_section=MicroscopicResults,description="""Microscopic results such as trajectories.""")
 
     macroscopic_results = SubSection(sub_section=MacroscopicResults,  description="""Macroscopic results such as densities or flow.""")
 
 
-
-
-
-
-# We extend the existing common definition of section Workflow
-class ExampleWorkflow(Workflow):
-    # We alter the default base class behavior to add all definitions to the existing
-    # base class instead of inheriting from the base class
-    m_def = Section(extends_base_section=True)
-
-    # We define an additional example quantity. Use the prefix x_<parsername>_ to denote
-    # non common quantities.
-    x_example_magic_value = Quantity(
-        type=int, description='The magic value from a magic source.'
-    )
 
 
 m_package.__init_metainfo__()

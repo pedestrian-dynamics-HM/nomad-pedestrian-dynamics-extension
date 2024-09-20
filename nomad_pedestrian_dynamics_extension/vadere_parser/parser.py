@@ -5,14 +5,12 @@ import json
 import os
 import re
 from logging import Logger
-from venv import logger
 
-from nomad.parsing import MatchingParser
+import numpy as np
 from nomad.parsing.file_parser import FileParser, DataTextParser
-from numpy.array_api import result_type
 
 from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Output, Simulation, \
-    PsychologyModel, VadereResults, MacroscopicResults, MicroscopicResults, VadereProperties, CustomSection
+    PsychologyModel, VadereResults, MacroscopicResults, MicroscopicResults, VadereProperties, DensitiesAndVelocities
 
 
 class PedestrianTrajectoryParser(DataTextParser):
@@ -104,7 +102,10 @@ class VadereParser:
         self.model.psychology_model = self.psychology_model
         self.model.time_step_size = self.scenario_parser.get("scenario").get("attributesSimulation").get(
             'simTimeStepLength')
-        self.model.seed = self.scenario_parser.get("scenario").get("attributesSimulation").get('simulationSeed')
+
+
+        self.simulation.seed = self.scenario_parser.get("scenario").get("attributesSimulation").get('simulationSeed')
+        self.simulation.total_simulation_time = self.scenario_parser.get("scenario").get("attributesSimulation").get('finishTime')
 
         self.simulation.model = self.model
 
@@ -114,28 +115,30 @@ class VadereParser:
         self.output.position = [ [1.0,0.0,0.0], [2.0,0.0,0.0], [3.0,0.0,0.0], [4.0,0.0,0.0] ]
         self.simulation.output = self.output
 
-        if self.results is None:
 
-            logger.info("PARSER: create section because it does not exist")
-            self.results = VadereResults()
-            self.results.m_create(MicroscopicResults)
-            self.results.m_create(MacroscopicResults)
-            self.results.macroscopic_results.m_create(CustomSection)
-        else:
-            logger.info("PARSER: only update the section")
-            ##self.results.m_update()
-            ## self.results.macroscopic_results.m_update()
+        self.results = VadereResults()
+        self.results.m_create(MicroscopicResults)
+        self.results.m_create(MacroscopicResults)
+        self.results.macroscopic_results.m_create(DensitiesAndVelocities)
+
+        self.simulation.total_simulation_time
+        time_interval = self.results.macroscopic_results.temporal_resolution.magnitude
+
+        evaluation_times = np.arange(start=0, stop= self.simulation.total_simulation_time, step= time_interval)
+
+        evaluation_times = evaluation_times[0:5]
+
+        for evaluation_time in evaluation_times:
+            densities_and_velocities = DensitiesAndVelocities()
+            densities_and_velocities.velocities = [[1,2,3],[1,2,3],[1,2,3]]
+            densities_and_velocities.densities = [[1, 1, 1], [2, 2, 2], [3, 3, 3]]
+            self.results.macroscopic_results.densities_and_velocities.append(densities_and_velocities)
 
 
         self.results.m_create(VadereProperties)
-
         self.results.properties.total_number_of_pedestrians = 234
-
         self.results.microscopic_results.trajectories = [[1.0, 0.0, 0.0], [2.0, 0.0, 0.0], [1,2,3]]
         self.results.microscopic_results.testdata1 = 14.5
-
-        #self.results.macroscopic_results.densities = [[1.0, 0.0, 0.0], [2.0, 0.0, 0.0], [1, 2, 3]]
-        self.results.macroscopic_results.testdata2 = 12.5
 
         archive.results = self.results
 
@@ -143,19 +146,11 @@ class VadereParser:
 
     def parse(self, filepath, archive, logger):
 
-        try:
-            self.id = archive.results.macroscopic_results.densities.sample_id
-            logger.info(f"The id is: {self.id}")
-        except AttributeError:
-            logger.info(f"The id is not defined")
-
-
         self.maindir = os.path.dirname(os.path.abspath(filepath))
         self.init_parser(logger)
         logger.info("Start parsing scenario file")
         self.parse_scenario_info()
         logger.info("Start parsing trajectory file")
-
 
         self.parse_trajectories(archive, logger)
         archive.data = self.simulation
