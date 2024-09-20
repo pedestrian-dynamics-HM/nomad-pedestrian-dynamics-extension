@@ -10,7 +10,7 @@ import numpy as np
 import pandas
 from nomad.parsing.file_parser import FileParser, DataTextParser
 
-from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Output, Simulation, \
+from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Simulation, \
     PsychologyModel, VadereResults, MacroscopicResults, MicroscopicResults, VadereProperties, DensitiesAndVelocities, Trajectories
 
 
@@ -87,7 +87,6 @@ class VadereParser:
         self.model = Model()
 
         self.psychology_model = PsychologyModel()
-        self.output = Output()
         self.logger.info("PARSER - init Create new Vadere results because of initalization")
         self.results = None
         self.id = None
@@ -140,7 +139,6 @@ class VadereParser:
         self.results = VadereResults()
         self.results.m_create(MicroscopicResults)
         self.results.m_create(MacroscopicResults)
-        self.results.macroscopic_results.m_create(DensitiesAndVelocities)
 
         for ped, traj in trajectories__.groupby(by="pedestrian_id"):
 
@@ -156,27 +154,44 @@ class VadereParser:
             else:
                 self.results.microscopic_results.trajectories.append(trajectory)
 
-
-
-        self.output.position = [ [1.0,0.0,0.0], [2.0,0.0,0.0], [3.0,0.0,0.0], [4.0,0.0,0.0] ]
-        self.simulation.output = self.output
-
-
-
-
         time_interval = self.results.macroscopic_results.temporal_resolution.magnitude
-
         evaluation_times = np.arange(start=0, stop= self.simulation.total_simulation_time, step= time_interval)
 
-        evaluation_times = evaluation_times[0:5]
+        #evaluation_times = evaluation_times[0:5]
+
+
+        spatial_resolution = self.results.macroscopic_results.spatial_resolution.magnitude
+
+        origin_x = self.scenario_parser.get("scenario").get("topography").get("attributes").get("bounds").get("x")
+        origin_y = self.scenario_parser.get("scenario").get("topography").get("attributes").get("bounds").get("y")
+        width = self.scenario_parser.get("scenario").get("topography").get("attributes").get("bounds").get("width")
+        height = self.scenario_parser.get("scenario").get("topography").get("attributes").get("bounds").get("height")
+
+        gridx = np.arange(origin_x, width + spatial_resolution, spatial_resolution)
+        gridy = np.arange(origin_y, height + spatial_resolution, spatial_resolution)
 
         for evaluation_time in evaluation_times:
             densities_and_velocities = DensitiesAndVelocities()
             densities_and_velocities.time = evaluation_time
-            densities_and_velocities.velocities = [[1,2,3],[1,2,3],[1,2,3]]
-            densities_and_velocities.densities = [[1, 1, 1], [2, 2, 2], [3, 3, 3]]
-            self.results.macroscopic_results.densities_and_velocities.append(densities_and_velocities)
 
+            lower_bound = evaluation_time
+            upper_bound = lower_bound + evaluation_time
+
+            position = trajectories__[(trajectories__['time'] >= lower_bound) & (trajectories__['time'] <= upper_bound)]
+            position.drop_duplicates(inplace=True)
+
+            x = position["position_x"]
+            y = position["position_y"]
+
+            densities__, _, _ = np.histogram2d(x, y, bins=[gridx, gridy])
+
+            densities_and_velocities.velocities = [[1,2,3],[1,2,3],[1,2,3]]
+            densities_and_velocities.densities = np.flip(densities__.transpose(),0)
+
+            if len(self.results.macroscopic_results.densities_and_velocities) == 0:
+                self.results.macroscopic_results.densities_and_velocities = [densities_and_velocities]
+            else:
+                self.results.macroscopic_results.densities_and_velocities.append(densities_and_velocities)
 
         self.results.m_create(VadereProperties)
         self.results.properties.total_number_of_pedestrians = 234

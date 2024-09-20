@@ -71,15 +71,7 @@ class Scenario(ArchiveSection):
     )
 
 
-class Output(ArchiveSection):
-    m_def = Section()
 
-
-    position = Quantity(
-        type=np.float64,
-        shape=['1...*',3],
-        description="""Trajectories of the pedestrians.""",
-    )
 
 
 class Simulation(ArchiveSection):
@@ -94,8 +86,6 @@ class Simulation(ArchiveSection):
     date = Quantity(type=Datetime, description="""Start time of the execution.""")
 
     model = SubSection(sub_section=Model, description="""Simulation model.""")
-
-    output = SubSection(sub_section=Output, description="""Simulation output.""")
 
     seed = Quantity(type = np.int64, description="""Simulation seed""",
     )
