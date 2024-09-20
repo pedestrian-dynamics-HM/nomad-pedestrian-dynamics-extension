@@ -134,6 +134,7 @@ class Trajectories(PlotSection):
         description="""Y-Position""",
     )
 
+
     def normalize(self, archive, logger):
 
         super(Trajectories, self).normalize(archive, logger)

@@ -145,10 +145,11 @@ class VadereParser:
         for ped, traj in trajectories__.groupby(by="pedestrian_id"):
 
             trajectory = Trajectories()
+
             trajectory.pedestrian_id = ped
-            trajectory.time = traj["time"].values
-            trajectory.x_position = traj["position_x"].values
-            trajectory.y_position = traj["position_y"].values
+            trajectory.position_x = list(traj["position_x"])
+            trajectory.time = list(traj["time"])
+            trajectory.position_y = list(traj["position_y"])
 
             if len(self.results.microscopic_results.trajectories) == 0:
                 self.results.microscopic_results.trajectories = [trajectory]
