@@ -170,6 +170,12 @@ class VadereParser:
         gridx = np.arange(origin_x, width + spatial_resolution, spatial_resolution)
         gridy = np.arange(origin_y, height + spatial_resolution, spatial_resolution)
 
+
+        max_count = 0
+
+        if len(evaluation_times) > 50:
+            evaluation_times = evaluation_times[:50]
+
         for evaluation_time in evaluation_times:
             densities_and_velocities = DensitiesAndVelocities()
             densities_and_velocities.time = evaluation_time
@@ -185,7 +191,10 @@ class VadereParser:
 
             densities__, _, _ = np.histogram2d(x, y, bins=[gridx, gridy])
 
-            densities_and_velocities.velocities = [[1,2,3],[1,2,3],[1,2,3]]
+            max_count = np.max([max_count,densities__.flatten().sum()]).astype(int)
+
+            densities__ = densities__/spatial_resolution**2
+
             densities_and_velocities.densities = np.flip(densities__.transpose(),0)
 
             if len(self.results.macroscopic_results.densities_and_velocities) == 0:
@@ -194,8 +203,11 @@ class VadereParser:
                 self.results.macroscopic_results.densities_and_velocities.append(densities_and_velocities)
 
         self.results.m_create(VadereProperties)
-        self.results.properties.total_number_of_pedestrians = 234
-        self.results.microscopic_results.testdata1 = 14.5
+        self.results.properties.total_number_of_pedestrians = trajectories__["pedestrian_id"].max()
+
+
+
+
 
         archive.results = self.results
 

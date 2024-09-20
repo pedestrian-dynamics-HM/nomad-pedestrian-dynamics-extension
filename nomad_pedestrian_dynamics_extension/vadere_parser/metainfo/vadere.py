@@ -200,7 +200,7 @@ class MacroscopicResults(ArchiveSection):
     temporal_resolution = Quantity(
         type=np.float64,
         description="""Temporal resolution corresponds to temporal resolution""",
-        default=0.4,
+        default=4,
         unit="s"
     )
 
