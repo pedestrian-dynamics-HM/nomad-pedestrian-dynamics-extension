@@ -20,6 +20,8 @@ def test_vadere_parser_without_matching():
     assert len(sim.model) == 4 #TODO: needs to be update after finalizing the structure
     assert len(sim.output) == 1
 
+    archive.m_to_dict()
+
 
 def test_entry_point_configuration():
     """
@@ -29,6 +31,7 @@ def test_entry_point_configuration():
 
     data_path = os.path.join(os.path.dirname(__file__), "data", "basic_2_density_discrete_ca_2024-08-05_12-33-49.69" , "postvis.traj")
     parse(data_path)
+
 
 
 

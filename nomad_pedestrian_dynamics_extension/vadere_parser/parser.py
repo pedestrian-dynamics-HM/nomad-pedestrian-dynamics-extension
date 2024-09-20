@@ -8,7 +8,8 @@ from logging import Logger
 
 from nomad.parsing.file_parser import FileParser, DataTextParser
 
-from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Output, Simulation, PsychologyModel
+from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Output, Simulation, \
+    PsychologyModel, VadereResults, MacroscopicResults, MicroscopicResults
 
 
 class PedestrianTrajectoryParser(DataTextParser):
@@ -63,6 +64,8 @@ class VadereParser:
         self.psychology_model = PsychologyModel()
         self.output = Output()
 
+        self.results = VadereResults()
+
     def init_parser(self, logger):
 
         # init scenario parser
@@ -100,11 +103,23 @@ class VadereParser:
 
         self.simulation.model = self.model
 
-    def parse_trajectories(self):
+    def parse_trajectories(self, archive):
 
         self.pedestrian_traj_parser.parse()
         self.output.position = [ [1.0,0.0,0.0], [2.0,0.0,0.0], [3.0,0.0,0.0], [4.0,0.0,0.0] ]
         self.simulation.output = self.output
+
+        self.results.m_create(MicroscopicResults)
+        self.results.m_create(MacroscopicResults)
+
+        self.results.microscopic_results.trajectories = [[1.0, 0.0, 0.0], [2.0, 0.0, 0.0], [1,2,3]]
+        self.results.microscopic_results.testdata1 = 14.5
+
+        self.results.macroscopic_results.densities = [[1.0, 0.0, 0.0], [2.0, 0.0, 0.0], [1, 2, 3]]
+        self.results.macroscopic_results.testdata2 = 12.5
+
+        archive.results = self.results
+
 
 
     def parse(self, filepath, archive, logger):
@@ -113,8 +128,13 @@ class VadereParser:
         logger.info("Start parsing scenario file")
         self.parse_scenario_info()
         logger.info("Start parsing trajectory file")
-        self.parse_trajectories()
+
+        self.parse_trajectories(archive)
         archive.data = self.simulation
+
+
+
+
 
 # class CustomSection(PlotSection, EntryData):
 #     m_def = Section()

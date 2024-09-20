@@ -97,6 +97,55 @@ class Simulation(ArchiveSection):
     output = SubSection(sub_section=Output, description="""Simulation output.""")
 
 
+class MicroscopicResults(ArchiveSection):
+
+    m_def = Section()
+
+
+
+    trajectories = Quantity(
+        type=np.float64,
+        shape=['1...*',3],
+        description="""DUMMY.""",
+        default=[[1,2,4],[1,2,2]]
+    )
+
+    testdata1= Quantity(
+        type=np.float64,
+        description="""DUMMY.""",
+        default = 1.234
+    )
+
+class MacroscopicResults(ArchiveSection):
+    m_def = Section()
+
+    densities = Quantity(
+            type=np.float64,
+            shape=['1...*', 3],
+            description="""DUMMY.""",
+    )
+
+    testdata2= Quantity(
+        type=np.float64,
+        description="""DUMMY.""",
+    )
+
+
+class VadereResults(ArchiveSection):
+
+    m_def = Section()
+
+    testdata33 = Quantity(
+        type=np.float64,
+        description="""DUMMY.""",
+    )
+
+
+    microscopic_results = SubSection(sub_section=MicroscopicResults,description="""Microscopic results such as trajectories.""")
+
+    macroscopic_results = SubSection(sub_section=MacroscopicResults,  description="""Macroscopic results such as densities or flow.""")
+
+
 
 
 
