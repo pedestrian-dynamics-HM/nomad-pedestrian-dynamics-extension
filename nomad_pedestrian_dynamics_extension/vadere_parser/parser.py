@@ -11,7 +11,8 @@ import pandas
 from nomad.parsing.file_parser import FileParser, DataTextParser
 
 from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Simulation, \
-    PsychologyModel, VadereResults, MacroscopicResults, MicroscopicResults, VadereProperties, DensitiesAndVelocities, Trajectories
+    PsychologyModel, VadereResults, MacroscopicResults, MicroscopicResults, VadereProperties, Densities, Trajectories, \
+    Scenario
 
 
 class PedestrianTrajectoryParser(FileParser):
@@ -132,6 +133,24 @@ class VadereParser:
 
         self.simulation.model = self.model
 
+        self.simulation.m_create(Scenario)
+
+        width = self.scenario_parser.get("scenario").get("topography").get("attributes").get("bounds").get("width")
+        height = self.scenario_parser.get("scenario").get("topography").get("attributes").get("bounds").get("height")
+
+        sources = self.scenario_parser.get("scenario").get("topography").get("sources")
+        targets = self.scenario_parser.get("scenario").get("topography").get("targets")
+
+
+
+        self.simulation.scenario.dimensions = [width, height]
+        self.simulation.scenario.number_of_sources = len(sources)
+        self.simulation.scenario.number_of_targets = len(targets)
+
+
+
+
+
     def parse_trajectories(self, archive, logger):
 
         trajectories__ = self.pedestrian_traj_parser.get_trajectories()
@@ -177,7 +196,7 @@ class VadereParser:
             evaluation_times = evaluation_times[:50]
 
         for evaluation_time in evaluation_times:
-            densities_and_velocities = DensitiesAndVelocities()
+            densities_and_velocities = Densities()
             densities_and_velocities.time = evaluation_time
 
             lower_bound = evaluation_time
@@ -195,18 +214,16 @@ class VadereParser:
 
             densities__ = densities__/spatial_resolution**2
 
-            densities_and_velocities.densities = np.flip(densities__.transpose(),0)
+            densities_and_velocities.densities = densities__
 
-            if len(self.results.macroscopic_results.densities_and_velocities) == 0:
-                self.results.macroscopic_results.densities_and_velocities = [densities_and_velocities]
+            if len(self.results.macroscopic_results.densities) == 0:
+                self.results.macroscopic_results.densities = [densities_and_velocities]
             else:
-                self.results.macroscopic_results.densities_and_velocities.append(densities_and_velocities)
+                self.results.macroscopic_results.densities.append(densities_and_velocities)
 
         self.results.m_create(VadereProperties)
         self.results.properties.total_number_of_pedestrians = trajectories__["pedestrian_id"].max()
-
-
-
+        self.results.properties.max_number_of_pedestrians = max_count
 
 
         archive.results = self.results

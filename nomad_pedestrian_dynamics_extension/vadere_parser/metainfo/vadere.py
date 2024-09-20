@@ -66,6 +66,7 @@ class Scenario(ArchiveSection):
         unit='m'
     )
 
+    #TODO: implement
     origin_destination_matrix = Quantity(
         type=np.float64, shape=['number_of_sources', 'number_of_targets'], description="""Origin destination matrix."""
     )
@@ -94,6 +95,10 @@ class Simulation(ArchiveSection):
         type = np.float64,
         description="""Total simulation time""",
     )
+
+    scenario = SubSection(sub_section=Scenario,
+                          description="""Scenario properties."""
+                          )
 
 
 
@@ -148,42 +153,35 @@ class MicroscopicResults(ArchiveSection):
 
 
 
-class DensitiesAndVelocities(PlotSection):
+class Densities(PlotSection):
 
     m_def = Section()
 
     time = Quantity(
         type=np.float64,
         description="""Point of time""",
+        unit="s"
     )
 
     densities = Quantity(
         type=np.float64,
         shape=['1...*', '1...*'],
         description="""Densities""",
+        unit="1/m**2"
     )
-
-    velocities = Quantity(
-        type=np.float64,
-        shape=['1...*', '1...*' ],
-        description="""Velocities""",
-    )
-
 
     def normalize(self, archive, logger):
 
-        super(DensitiesAndVelocities, self).normalize(archive, logger)
+        super(Densities, self).normalize(archive, logger)
 
-        heatmap = go.Heatmap(z=self.densities, showscale=False, connectgaps=True, zsmooth='best')
-        figure1 = go.Figure(data=heatmap)
+        densities_plot = np.flip(self.densities.transpose(),0)
+
+        heatmap = go.Heatmap(z=densities_plot, showscale=True, connectgaps=False, colorbar=dict(thickness=5))
+        figure1 = go.Figure(data=heatmap, title=f"Density for time {self.time.magnitude}")
         figure_json = figure1.to_plotly_json()
         self.figures.append(PlotlyFigure(label='Density', index=0, figure=figure_json))
 
-        heatmap = go.Heatmap(z=self.velocities, showscale=False, connectgaps=True, zsmooth='best')
-        figure2 = go.Figure(data=heatmap)
-        figure_json = figure2.to_plotly_json()
 
-        self.figures.append(PlotlyFigure(label='Velocity', index=1, figure=figure_json))
 
 
 class MacroscopicResults(ArchiveSection):
@@ -204,8 +202,8 @@ class MacroscopicResults(ArchiveSection):
         unit="s"
     )
 
-    densities_and_velocities = SubSection(
-        sub_section = DensitiesAndVelocities,
+    densities = SubSection(
+        sub_section = Densities,
         repeats=True
     )
 
