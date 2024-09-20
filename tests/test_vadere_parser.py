@@ -1,6 +1,7 @@
 import os.path
 from logging import Logger
 
+from mpmath.libmp import normalize
 from nomad.client import parse
 from nomad.datamodel import EntryArchive
 from nomad_pedestrian_dynamics_extension.vadere_parser import *
@@ -30,7 +31,16 @@ def test_entry_point_configuration():
     """
 
     data_path = os.path.join(os.path.dirname(__file__), "data", "basic_2_density_discrete_ca_2024-08-05_12-33-49.69" , "postvis.traj")
-    parse(data_path)
+    archive = parse(data_path)
+
+    from nomad.client import normalize_all
+
+    # run all normalizers
+    normalize_all(archive[0])
+
+    print(archive[0].m_to_dict())
+
+
 
 
 

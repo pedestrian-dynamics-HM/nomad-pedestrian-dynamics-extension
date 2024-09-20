@@ -2,9 +2,9 @@ from email.policy import default
 from xmlrpc.client import boolean
 
 import numpy as np
-from nomad.datamodel import ArchiveSection
+from nomad.datamodel import ArchiveSection, Results
 from nomad.datamodel.metainfo.workflow import Workflow
-from nomad.metainfo import Datetime, Package, Quantity, Reference, Section, SubSection
+from nomad.metainfo import Datetime, Package, Quantity, Reference, Section, SubSection, MSection
 
 m_package = Package(name='vadere_nomadmetainfo_json', description='None')
 
@@ -130,8 +130,18 @@ class MacroscopicResults(ArchiveSection):
         description="""DUMMY.""",
     )
 
+class Properties(MSection):
 
-class VadereResults(ArchiveSection):
+    m_def = Section()
+
+    total_number_of_pedestrians = Quantity(
+        type=np.float64,
+        description="""Total number of pedestrians in the simulation""",
+    )
+
+
+
+class VadereResults(ArchiveSection,Results):
 
     m_def = Section()
 
@@ -139,6 +149,9 @@ class VadereResults(ArchiveSection):
         type=np.float64,
         description="""DUMMY.""",
     )
+
+
+    properties = SubSection(sub_section=Properties, description="""scenario specific properties""")
 
 
     microscopic_results = SubSection(sub_section=MicroscopicResults,description="""Microscopic results such as trajectories.""")
