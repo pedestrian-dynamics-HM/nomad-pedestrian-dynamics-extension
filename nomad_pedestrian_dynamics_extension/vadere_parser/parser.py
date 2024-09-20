@@ -9,7 +9,7 @@ from logging import Logger
 from nomad.parsing.file_parser import FileParser, DataTextParser
 
 from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Output, Simulation, \
-    PsychologyModel, VadereResults, MacroscopicResults, MicroscopicResults, Properties
+    PsychologyModel, VadereResults, MacroscopicResults, MicroscopicResults, VadereProperties
 
 
 class PedestrianTrajectoryParser(DataTextParser):
@@ -111,7 +111,7 @@ class VadereParser:
 
         self.results.microscopic_results=  MicroscopicResults()
         self.results.macroscopic_results = MacroscopicResults()
-        self.results.m_create(Properties)
+        self.results.properties = VadereProperties()
 
         self.results.microscopic_results.trajectories = [[1.0, 0.0, 0.0], [2.0, 0.0, 0.0], [1,2,3]]
         self.results.microscopic_results.testdata1 = 14.5

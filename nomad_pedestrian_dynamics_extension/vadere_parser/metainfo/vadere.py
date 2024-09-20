@@ -130,7 +130,7 @@ class MacroscopicResults(ArchiveSection):
         description="""DUMMY.""",
     )
 
-class Properties(MSection):
+class VadereProperties(MSection):
 
     m_def = Section()
 
@@ -151,7 +151,7 @@ class VadereResults(ArchiveSection,Results):
     )
 
 
-    properties = SubSection(sub_section=Properties, description="""scenario specific properties""")
+    properties = SubSection(sub_section=VadereProperties, description="""scenario specific properties""")
 
 
     microscopic_results = SubSection(sub_section=MicroscopicResults,description="""Microscopic results such as trajectories.""")
