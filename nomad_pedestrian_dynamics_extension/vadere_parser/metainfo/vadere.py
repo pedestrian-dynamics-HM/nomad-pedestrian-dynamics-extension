@@ -141,7 +141,7 @@ class CustomSection(PlotSection, EntryData):
         figure1.update_layout(height=400, width=716, title_text="Creating Subplots in Plotly")
         self.figures.append(PlotlyFigure(label='figure 1', figure=figure1.to_plotly_json()))
 
-        figure2 = px.scatter(x=self.substrate_temperature, y=chamber_pressure, color=chamber_pressure, title="Chamber as a function of Temperature")
+        figure2 = px.scatter(x=substrate_temperature, y=chamber_pressure, color=chamber_pressure, title="Chamber as a function of Temperature")
         self.figures.append(PlotlyFigure(label='figure 2', index=1, figure=figure2.to_plotly_json()))
 
         heatmap_data = [[None, None, None, 12, 13, 14, 15, 16],

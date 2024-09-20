@@ -116,9 +116,7 @@ class VadereParser(MatchingParser):
 
         self.results.m_create(VadereProperties)
 
-        time = [1, 2, 3, 4, 5, 6, 7, 8]
-        chamber_pressure = [4, 5, 5, 5, 6, 2, 0, 1]
-        substrate_temperature = [0, 0, 5, 0, 0, 2, 0, 1]
+
 
         self.results.properties.total_number_of_pedestrians = 234
 
