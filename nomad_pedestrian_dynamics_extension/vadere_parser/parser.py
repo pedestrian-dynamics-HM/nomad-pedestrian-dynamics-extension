@@ -68,6 +68,7 @@ class VadereParser:
         self.output = Output()
         self.logger.info("PARSER - init Create new Vadere results because of initalization")
         self.results = None
+        self.id = None
 
 
     def init_parser(self, logger):
@@ -141,11 +142,20 @@ class VadereParser:
 
 
     def parse(self, filepath, archive, logger):
+
+        try:
+            self.id = archive.results.macroscopic_results.densities.sample_id
+            logger.info(f"The id is: {self.id}")
+        except AttributeError:
+            logger.info(f"The id is not defined")
+
+
         self.maindir = os.path.dirname(os.path.abspath(filepath))
         self.init_parser(logger)
         logger.info("Start parsing scenario file")
         self.parse_scenario_info()
         logger.info("Start parsing trajectory file")
+
 
         self.parse_trajectories(archive, logger)
         archive.data = self.simulation
