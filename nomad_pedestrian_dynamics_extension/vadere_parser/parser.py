@@ -104,7 +104,7 @@ class VadereParser(MatchingParser):
 
         self.simulation.model = self.model
 
-    def parse_trajectories(self, archive):
+    def parse_trajectories(self, archive, logger):
 
         self.pedestrian_traj_parser.parse()
         self.output.position = [ [1.0,0.0,0.0], [2.0,0.0,0.0], [3.0,0.0,0.0], [4.0,0.0,0.0] ]
@@ -113,6 +113,7 @@ class VadereParser(MatchingParser):
         self.results.m_create(MicroscopicResults)
         self.results.m_create(MacroscopicResults)
         self.results.macroscopic_results.m_create(CustomSection)
+        logger.info("PARSER: set id = 2")
         self.results.macroscopic_results.densities.sample_id = 2
 
         self.results.m_create(VadereProperties)
@@ -129,6 +130,8 @@ class VadereParser(MatchingParser):
 
 
 
+
+
     def parse(self, filepath, archive, logger):
         self.maindir = os.path.dirname(os.path.abspath(filepath))
         self.init_parser(logger)
@@ -136,7 +139,7 @@ class VadereParser(MatchingParser):
         self.parse_scenario_info()
         logger.info("Start parsing trajectory file")
 
-        self.parse_trajectories(archive)
+        self.parse_trajectories(archive, logger)
         archive.data = self.simulation
 
 

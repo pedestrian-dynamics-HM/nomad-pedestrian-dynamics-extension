@@ -124,11 +124,15 @@ class MicroscopicResults(ArchiveSection):
 
 
 class CustomSection(PlotSection, EntryData):
-    m_def = Section()
+    m_def = Section(validate=True)
 
-    sample_id = Quantity(type=np.int64, a_eln=dict(component="NumberEditQuantity",default=4,minValue=1))
+    sample_id = Quantity(type=np.int64, default=1, a_eln=dict(component="NumberEditQuantity",minValue=1))
 
     def normalize(self, archive, logger):
+
+
+        logger.info(f"Sample id arrived at normalizer in custom section: {self.sample_id}")
+
         super(CustomSection, self).normalize(archive, logger)
 
         time = [1, 2, 3, 4, 5, 6, 7, 8]
