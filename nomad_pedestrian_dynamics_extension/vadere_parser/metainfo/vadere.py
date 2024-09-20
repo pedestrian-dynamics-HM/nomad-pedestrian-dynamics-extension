@@ -176,8 +176,8 @@ class Densities(PlotSection):
 
         densities_plot = np.flip(self.densities.transpose(),0)
 
-        heatmap = go.Heatmap(z=densities_plot, showscale=True, connectgaps=False, colorbar=dict(thickness=5))
-        figure1 = go.Figure(data=heatmap, title=f"Density for time {self.time.magnitude}")
+        heatmap = go.Heatmap(z=densities_plot, showscale=True, colorbar=dict(thickness=5,title="Pedestrian density"))
+        figure1 = go.Figure(data=heatmap)
         figure_json = figure1.to_plotly_json()
         self.figures.append(PlotlyFigure(label='Density', index=0, figure=figure_json))
 
