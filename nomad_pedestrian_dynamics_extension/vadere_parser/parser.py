@@ -66,7 +66,7 @@ class VadereParser:
 
         self.psychology_model = PsychologyModel()
         self.output = Output()
-        logger.info("PARSER - init Create new Vadere results because of initalization")
+        self.logger.info("PARSER - init Create new Vadere results because of initalization")
         self.results = VadereResults()
 
     def init_parser(self, logger):
