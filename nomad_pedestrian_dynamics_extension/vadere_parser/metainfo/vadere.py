@@ -126,7 +126,7 @@ class MicroscopicResults(ArchiveSection):
 class CustomSection(PlotSection, EntryData):
     m_def = Section()
 
-    sample_id = Quantity(type=np.int64, a_eln=dict(component='NumberEditQuantity',default=4,minValue=1))
+    sample_id = Quantity(type=np.int64, a_eln=dict(component="NumberEditQuantity",default=4,minValue=1))
 
     def normalize(self, archive, logger):
         super(CustomSection, self).normalize(archive, logger)

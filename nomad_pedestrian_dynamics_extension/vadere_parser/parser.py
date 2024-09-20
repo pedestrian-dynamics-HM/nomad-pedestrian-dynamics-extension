@@ -113,10 +113,9 @@ class VadereParser(MatchingParser):
         self.results.m_create(MicroscopicResults)
         self.results.m_create(MacroscopicResults)
         self.results.macroscopic_results.m_create(CustomSection)
+        self.results.macroscopic_results.densities.sample_id = 2
 
         self.results.m_create(VadereProperties)
-
-
 
         self.results.properties.total_number_of_pedestrians = 234
 
