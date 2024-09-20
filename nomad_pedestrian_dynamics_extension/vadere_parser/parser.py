@@ -5,9 +5,11 @@ import json
 import os
 import re
 from logging import Logger
+from venv import logger
 
 from nomad.parsing import MatchingParser
 from nomad.parsing.file_parser import FileParser, DataTextParser
+from numpy.array_api import result_type
 
 from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Output, Simulation, \
     PsychologyModel, VadereResults, MacroscopicResults, MicroscopicResults, VadereProperties, CustomSection
@@ -51,7 +53,7 @@ class JSONParser(FileParser):
         return self
 
 
-class VadereParser(MatchingParser):
+class VadereParser:
 
     def __init__(self):
 
@@ -64,7 +66,7 @@ class VadereParser(MatchingParser):
 
         self.psychology_model = PsychologyModel()
         self.output = Output()
-
+        logger.info("PARSER - init Create new Vadere results because of initalization")
         self.results = VadereResults()
 
     def init_parser(self, logger):
@@ -112,11 +114,13 @@ class VadereParser(MatchingParser):
 
         self.results.m_create(MicroscopicResults)
         self.results.m_create(MacroscopicResults)
-        self.results.macroscopic_results.m_create(CustomSection)
-        logger.info("PARSER: set id = 2")
 
-       # if self.results.macroscopic_results.densities.sample_id is None:
-          #  print()
+        if self.results.macroscopic_results.densities is None:
+            logger.info("PARSER: create section because it does not exist")
+            self.results.macroscopic_results.m_create(CustomSection)
+        else:
+            logger.info("PARSER: only update the section")
+            self.results.macroscopic_results.m_update()
 
 
         self.results.m_create(VadereProperties)
