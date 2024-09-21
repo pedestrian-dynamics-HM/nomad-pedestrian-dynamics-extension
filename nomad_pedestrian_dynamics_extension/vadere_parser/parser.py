@@ -10,9 +10,15 @@ import numpy as np
 import pandas
 from nomad.parsing.file_parser import FileParser, DataTextParser
 
-from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import Model, Simulation, \
-    PsychologyModel, VadereResults, MacroscopicResults, MicroscopicResults, VadereProperties, Densities, Trajectories, \
-    Scenario
+from nomad_pedestrian_dynamics_extension.vadere_schema.trajectories import Trajectories
+from nomad_pedestrian_dynamics_extension.vadere_schema.simulation import Simulation
+from nomad_pedestrian_dynamics_extension.vadere_schema.model import PsychologyModel, Model
+from nomad_pedestrian_dynamics_extension.vadere_schema.scenario import Scenario
+from nomad_pedestrian_dynamics_extension.vadere_schema.results import VadereResults
+from nomad_pedestrian_dynamics_extension.vadere_schema.microscopic_quantities import MicroscopicResults
+from nomad_pedestrian_dynamics_extension.vadere_schema.properties import VadereProperties
+from nomad_pedestrian_dynamics_extension.vadere_schema.densities import Densities
+from nomad_pedestrian_dynamics_extension.vadere_schema.macroscopic_quantities import MacroscopicResults
 
 
 class PedestrianTrajectoryParser(FileParser):
