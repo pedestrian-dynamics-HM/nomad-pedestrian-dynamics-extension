@@ -4,6 +4,7 @@ from typing import Optional
 from nomad.config.models.plugins import ParserEntryPoint
 from nomad.config.models.plugins import SchemaPackageEntryPoint
 
+from nomad_pedestrian_dynamics_extension.pedestrian_dynamics_app.general import pdapp
 
 class MySchemaPackageEntryPoint(SchemaPackageEntryPoint):
 
