@@ -4,6 +4,7 @@ from typing import Optional
 from nomad.config.models.plugins import ParserEntryPoint
 from nomad.config.models.plugins import SchemaPackageEntryPoint
 
+
 class MySchemaPackageEntryPoint(SchemaPackageEntryPoint):
 
     def load(self):

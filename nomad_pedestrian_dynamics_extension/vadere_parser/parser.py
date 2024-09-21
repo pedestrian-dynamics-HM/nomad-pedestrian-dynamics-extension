@@ -235,7 +235,6 @@ class VadereParser:
         archive.results = self.results
 
 
-
     def parse(self, filepath, archive, logger):
 
         self.maindir = os.path.dirname(os.path.abspath(filepath))
