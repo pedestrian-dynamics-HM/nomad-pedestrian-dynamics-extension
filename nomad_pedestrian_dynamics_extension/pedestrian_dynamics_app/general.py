@@ -24,18 +24,17 @@ pdapp = AppEntryPoint(
         # entire package, or just a single schema from a package.
         filters=Filters(
             include=['*#nomad_pedestrian_dynamics_extension.vadere_schema.simulation.Simulation'],
-            exclude=[ '*ethods.*' ]
         ),
         # Controls which columns are shown in the results table
         columns=Columns(
             selected=[
                 'entry_id'
-                'data.simulation#nomad_pedestrian_dynamics_extension.vadere_schema.simulation.Simulation'
+                'Simulation#nomad_pedestrian_dynamics_extension.vadere_schema.simulation.Simulation'
             ],
             options={
                 'entry_id': Column(),
                 'upload_create_time': Column(),
-                'data.simulation#nomad_pedestrian_dynamics_extension.vadere_schema.simulation.Simulation': Column(),
+                'Simulation#nomad_pedestrian_dynamics_extension.vadere_schema.simulation.Simulation': Column(),
             }
         ),
         # Dictionary of search filters that are always enabled for queries made
@@ -49,11 +48,7 @@ pdapp = AppEntryPoint(
             ]
         },
         # Controls the filter menus shown on the left
-        filter_menus=FilterMenus(
-            options={
-                'material': FilterMenu(label="Material"),
-            }
-        ),
+        filter_menus=FilterMenus( ),
         # Controls the default dashboard shown in the search interface
         dashboard={
             'widgets': [
@@ -63,7 +58,7 @@ pdapp = AppEntryPoint(
                     'autorange': True,
                     'nbins': 30,
                     'scale': 'linear',
-                    'quantity': 'data.simulation#nomad_pedestrian_dynamics_extension.vadere_schema.simulation.Simulation',
+                    'quantity': 'Simulation#nomad_pedestrian_dynamics_extension.vadere_schema.simulation.Simulation',
                     'layout': {
                         'lg': {
                             'minH': 3,
