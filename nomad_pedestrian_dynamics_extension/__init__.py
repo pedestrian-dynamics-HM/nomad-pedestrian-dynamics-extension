@@ -2,7 +2,14 @@ from pydantic import Field
 from typing import Optional
 
 from nomad.config.models.plugins import ParserEntryPoint
-#
+from nomad.config.models.plugins import SchemaPackageEntryPoint
+
+class MySchemaPackageEntryPoint(SchemaPackageEntryPoint):
+
+    def load(self):
+        from nomad_pedestrian_dynamics_extension.vadere_schema.simulation import m_package
+        return m_package
+
 
 class EntryPoint(ParserEntryPoint):
     parser_class_name: str = Field(
@@ -46,4 +53,11 @@ vadere_parser_entry_point = EntryPoint(
         'status': '',
         'tableOfFiles': '',
     },
+)
+
+
+
+vadere_schema_entry_point = MySchemaPackageEntryPoint(
+    name = 'Vadere Schema Package',
+    description = 'Defines sections',
 )

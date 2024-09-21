@@ -92,3 +92,4 @@ disable_error_code = "import, annotation-unchecked"
 
 [project.entry-points.'nomad.plugin']
 vadereparser = "nomad_pedestrian_dynamics_extension:vadere_parser_entry_point"
+vadereschema = "nomad_pedestrian_dynamics_extension:vadere_schema_entry_point"
