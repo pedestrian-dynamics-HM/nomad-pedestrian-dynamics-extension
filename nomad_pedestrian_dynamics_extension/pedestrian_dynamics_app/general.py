@@ -24,6 +24,7 @@ pdapp = AppEntryPoint(
         # entire package, or just a single schema from a package.
         filters=Filters(
             include=['*#nomad_pedestrian_dynamics_extension.vadere_schema.simulation.Simulation'],
+            exclude=[ '*ethods.*' ]
         ),
         # Controls which columns are shown in the results table
         columns=Columns(
