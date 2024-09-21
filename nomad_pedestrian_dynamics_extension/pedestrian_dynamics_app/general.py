@@ -25,18 +25,18 @@ pdapp = AppEntryPoint(
         filters=Filters(
             include=['*#nomad_pedestrian_dynamics_extension.vadere_schema.simulation.Simulation'],
         ),
-        ## Controls which columns are shown in the results table
-        # columns=Columns(
-        #     selected=[
-        #         'entry_id'
-        #         'data.simulation#nomad_pedestrian_dynamics_extension.vadere_schema.simulation.Simulation'
-        #     ],
-        #     options={
-        #         'entry_id': Column(),
-        #         'upload_create_time': Column(),
-        #         'data.mysection.myquantity#nomad_example.schema_packages.mypackage.MySchema': Column(),
-        #     }
-        # ),
+        # Controls which columns are shown in the results table
+        columns=Columns(
+            selected=[
+                'entry_id'
+                'data.simulation#nomad_pedestrian_dynamics_extension.vadere_schema.simulation.Simulation'
+            ],
+            options={
+                'entry_id': Column(),
+                'upload_create_time': Column(),
+                'data.simulation#nomad_pedestrian_dynamics_extension.vadere_schema.simulation.Simulation': Column(),
+            }
+        ),
         # Dictionary of search filters that are always enabled for queries made
         # within this app. This is especially important to narrow down the
         # results to the wanted subset. Any available search filter can be
