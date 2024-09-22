@@ -10,8 +10,8 @@ readme = "README.md"
 authors = [{ name = "Christina Maria Mayr" }]
 license = { file = "LICENSE" }
 dependencies = [
-    "nomad-schema-plugin-run",
-    "nomad-simulations"
+    "nomad-schema-plugin-run==1.0.1",
+    "nomad-simulations==0.1.0"
 ]
 
 [project.urls]

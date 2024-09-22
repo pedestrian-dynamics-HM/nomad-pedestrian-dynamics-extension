@@ -29,8 +29,6 @@ import numpy as np
 from nomad.datamodel.data import Schema
 from nomad.metainfo import Datetime, Quantity, SchemaPackage, SubSection
 
-
-
 m_package = SchemaPackage()
 
 class Simulation(Schema):

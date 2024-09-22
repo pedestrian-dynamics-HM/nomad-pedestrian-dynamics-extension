@@ -21,6 +21,11 @@ from nomad_pedestrian_dynamics_extension.vadere_schema.densities import Densitie
 from nomad_pedestrian_dynamics_extension.vadere_schema.macroscopic_quantities import MacroscopicResults
 
 
+
+from runschema.run import Run, Program, TimeRun
+
+
+
 class PedestrianTrajectoryParser(FileParser):
 
     def __init__(self, mainfile: str = None, logger=None, **kwargs):
@@ -244,8 +249,23 @@ class VadereParser:
         self.parse_scenario_info()
         logger.info("Start parsing trajectory file")
 
+
+        archive.simulation = self.simulation
+
+        sec_run = Run()
+
+        archive.run.append(sec_run)
+
+        sec_run.program = Program(
+            name='Vadere', version=self.scenario_parser.get("release")
+        )
+
+        print("test")
+
+
         self.parse_trajectories(archive, logger)
         archive.data = self.simulation
+        archive.simulation = self.simulation
 
 
 
