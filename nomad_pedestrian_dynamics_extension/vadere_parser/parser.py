@@ -8,7 +8,11 @@ from logging import Logger
 
 import numpy as np
 import pandas
+from nomad.datamodel import EntryArchive
 from nomad.parsing.file_parser import FileParser, DataTextParser
+
+
+from runschema.run import Run, Program, TimeRun
 
 from nomad_pedestrian_dynamics_extension.vadere_schema.trajectories import Trajectories
 from nomad_pedestrian_dynamics_extension.vadere_schema.vaderesimulation import VadereSimulation
@@ -236,7 +240,7 @@ class VadereParser:
 
 
 
-    def parse(self, filepath, archive, logger):
+    def parse(self, filepath, archive : EntryArchive, logger):
 
         self.maindir = os.path.dirname(os.path.abspath(filepath))
         self.init_parser(logger)
@@ -245,7 +249,17 @@ class VadereParser:
         logger.info("Start parsing trajectory file")
 
         self.parse_trajectories(archive, logger)
-        archive.data = self.simulation
+        archive.simulation = self.simulation
+
+        sec_run = Run()
+
+        archive.run.append(sec_run)
+
+        sec_run.program = Program(
+            name='Vadere', version=self.scenario_parser.get("release")
+        )
+
+        print("test")
 
 
 
