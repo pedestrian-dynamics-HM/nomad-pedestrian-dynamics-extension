@@ -1,6 +1,7 @@
 from pydantic import Field
 from typing import Optional
 
+
 from nomad.config.models.plugins import ParserEntryPoint
 from nomad.config.models.plugins import SchemaPackageEntryPoint
 
