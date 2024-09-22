@@ -11,7 +11,9 @@ authors = [{ name = "Christina Maria Mayr" }]
 license = { file = "LICENSE" }
 dependencies = [
     "nomad-schema-plugin-run==1.0.1",
-    "nomad-simulations==0.1.0"
+    "nomad-simulations==0.1.0",
+    "nomad-schema-plugin-simulation-workflow>=1.0.1",
+    "nomad-parser-plugins-simulation>=1.0.2"
 ]
 
 [project.urls]
