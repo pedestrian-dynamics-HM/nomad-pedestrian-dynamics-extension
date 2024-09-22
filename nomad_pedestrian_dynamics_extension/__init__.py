@@ -7,7 +7,7 @@ from nomad.config.models.plugins import SchemaPackageEntryPoint
 class MySchemaPackageEntryPoint(SchemaPackageEntryPoint):
 
     def load(self):
-        from nomad_pedestrian_dynamics_extension.vadere_schema.simulation import m_package
+        from nomad_pedestrian_dynamics_extension.vadere_schema.vaderesimulation import m_package
         return m_package
 
 

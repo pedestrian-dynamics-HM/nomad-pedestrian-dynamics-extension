@@ -11,7 +11,7 @@ import pandas
 from nomad.parsing.file_parser import FileParser, DataTextParser
 
 from nomad_pedestrian_dynamics_extension.vadere_schema.trajectories import Trajectories
-from nomad_pedestrian_dynamics_extension.vadere_schema.simulation import Simulation
+from nomad_pedestrian_dynamics_extension.vadere_schema.vaderesimulation import VadereSimulation
 from nomad_pedestrian_dynamics_extension.vadere_schema.model import PsychologyModel, Model
 from nomad_pedestrian_dynamics_extension.vadere_schema.scenario import Scenario
 from nomad_pedestrian_dynamics_extension.vadere_schema.results import VadereResults
@@ -90,7 +90,7 @@ class VadereParser:
         self.scenario_parser = JSONParser()
         self.pedestrian_traj_parser = PedestrianTrajectoryParser()
 
-        self.simulation = Simulation(software_name="Vadere")
+        self.simulation = VadereSimulation(software_name="Vadere")
         self.model = Model()
 
         self.psychology_model = PsychologyModel()

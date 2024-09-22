@@ -26,14 +26,14 @@ if TYPE_CHECKING:
 
 
 import numpy as np
-from nomad.datamodel.data import Schema
 from nomad.metainfo import Datetime, Quantity, SchemaPackage, SubSection
 
+from nomad_simulations.schema_packages.general import Simulation
 
 
 m_package = SchemaPackage()
 
-class Simulation(Schema):
+class VadereSimulation(Simulation):
 
     software_name = Quantity(
         type=str, description="""Name of the software used for the simulation."""
