@@ -23,3 +23,4 @@ from .vadere import m_package
 
 m_env = LegacyMetainfoEnvironment()
 m_env.m_add_sub_section(Environment.packages, m_package)  # type: ignore
+

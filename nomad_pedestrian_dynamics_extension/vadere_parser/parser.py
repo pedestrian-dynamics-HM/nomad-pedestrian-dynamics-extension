@@ -12,15 +12,7 @@ import numpy as np
 import pandas
 from nomad.parsing.file_parser import FileParser, DataTextParser
 
-from nomad_pedestrian_dynamics_extension.vadere_schema.trajectories import Trajectories
-from nomad_pedestrian_dynamics_extension.vadere_schema.simulation import Simulation
-from nomad_pedestrian_dynamics_extension.vadere_schema.model import PsychologyModel, Model
-from nomad_pedestrian_dynamics_extension.vadere_schema.scenario import Scenario
-from nomad_pedestrian_dynamics_extension.vadere_schema.results import VadereResults
-from nomad_pedestrian_dynamics_extension.vadere_schema.microscopic_quantities import MicroscopicResults
-from nomad_pedestrian_dynamics_extension.vadere_schema.properties import VadereProperties
-from nomad_pedestrian_dynamics_extension.vadere_schema.densities import Densities
-from nomad_pedestrian_dynamics_extension.vadere_schema.macroscopic_quantities import MacroscopicResults
+from nomad_pedestrian_dynamics_extension.vadere_parser.metainfo.vadere import *
 
 
 
@@ -97,7 +89,7 @@ class VadereParser:
         self.scenario_parser = JSONParser()
         self.pedestrian_traj_parser = PedestrianTrajectoryParser()
 
-        self.simulation = Simulation(software_name="Vadere", name="test")
+        self.simulation = VadereRun(software_name="Vadere")
         self.model = Model()
 
         self.psychology_model = PsychologyModel()
@@ -266,20 +258,19 @@ class VadereParser:
 
         if self.scenario_parser.get("processWriters").get('isTimestamped'):
             day = re.search('\d{4}-\d{2}-\d{2}', self.maindir)
-
-
             date = datetime.datetime.strptime(day.group(), '%Y-%m-%d').date()
-
-
             sec_run.time_run.date_end = time.mktime(date.timetuple())
 
 
 
         print("test")
 
-        sec_run.m_add_sub_section(Simulation, self.simulation)
+        sec_run.m_add_sub_section(VadereRun.model, self.simulation.model)
+
+        sec_run.m_add_sub_section(VadereRun.scenario, self.simulation.scenario)
 
 
+        print()
 
         #archive.data = self.simulation
         #archive.simulation = self.simulation
