@@ -3,7 +3,7 @@ from nomad.datamodel.results import Properties
 from nomad.metainfo import Section, Quantity
 
 
-class VadereProperties(Properties):
+class ScenarioProperties(Properties):
 
     m_def = Section()
 
