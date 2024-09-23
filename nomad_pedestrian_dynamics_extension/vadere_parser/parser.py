@@ -1,5 +1,5 @@
 import os
-import datetime
+import datetime, time
 import glob
 import json
 import os
@@ -97,7 +97,7 @@ class VadereParser:
         self.scenario_parser = JSONParser()
         self.pedestrian_traj_parser = PedestrianTrajectoryParser()
 
-        self.simulation = Simulation(software_name="Vadere")
+        self.simulation = Simulation(software_name="Vadere", name="test")
         self.model = Model()
 
         self.psychology_model = PsychologyModel()
@@ -250,24 +250,39 @@ class VadereParser:
         logger.info("Start parsing scenario file")
         self.parse_scenario_info()
         logger.info("Start parsing trajectory file")
+        self.parse_trajectories(archive, logger)
 
 
-        archive.simulation = self.simulation
+        #archive.simulation = self.simulation
 
         sec_run = Run()
-
         archive.run.append(sec_run)
 
         sec_run.program = Program(
             name='Vadere', version=self.scenario_parser.get("release")
         )
 
+        sec_run.time_run = TimeRun()
+
+        if self.scenario_parser.get("processWriters").get('isTimestamped'):
+            day = re.search('\d{4}-\d{2}-\d{2}', self.maindir)
+
+
+            date = datetime.datetime.strptime(day.group(), '%Y-%m-%d').date()
+
+
+            sec_run.time_run.date_end = time.mktime(date.timetuple())
+
+
+
         print("test")
 
+        sec_run.m_add_sub_section(Simulation, self.simulation)
 
-        self.parse_trajectories(archive, logger)
-        archive.data = self.simulation
-        archive.simulation = self.simulation
+
+
+        #archive.data = self.simulation
+        #archive.simulation = self.simulation
 
 
 

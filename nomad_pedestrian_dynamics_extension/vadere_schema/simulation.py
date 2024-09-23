@@ -33,6 +33,12 @@ m_package = SchemaPackage()
 
 class Simulation(Schema):
 
+    name = Quantity(
+        type=str
+    )
+
+    repeats =Quantity(type=bool)
+
     software_name = Quantity(
         type=str, description="""Name of the software used for the simulation."""
     )
