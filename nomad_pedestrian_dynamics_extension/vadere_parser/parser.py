@@ -46,7 +46,7 @@ class PedestrianTrajectoryParser(FileParser):
         return self
 
     def get_trajectories(self):
-        traj = pandas.read_csv(self.mainfile, sep=" ", usecols=[0, 1, 2, 3])
+        traj = pandas.read_csv(self.mainfile, sep=" ", usecols=[0, 1, 3, 4])
         traj.columns.values[0] = "pedestrian_id"
         traj.columns.values[1] = "time"
         traj.columns.values[2] = "position_x"

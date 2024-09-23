@@ -1,7 +1,6 @@
 import os.path
 from logging import Logger
 
-from mpmath.libmp import normalize
 from nomad.client import parse
 from nomad.datamodel import EntryArchive
 from nomad_pedestrian_dynamics_extension.vadere_parser import *
