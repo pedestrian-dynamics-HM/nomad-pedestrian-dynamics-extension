@@ -3,7 +3,7 @@ from nomad.datamodel.results import Properties
 from nomad.metainfo import Section, Quantity
 
 
-class VadereProperties(Properties):
+class ScenarioProperties(Properties):
 
     m_def = Section()
 
@@ -15,6 +15,6 @@ class VadereProperties(Properties):
 
     max_number_of_pedestrians = Quantity(
         type=np.int64,
-        description="""Maximum number of pedestrians in the simulation. Corresponds the total number in case of a one time spawning""",
+        description="""Maximum number of pedestrians in the simulation. Corresponds to the total number in case of a one time spawning""",
         default=0
     )

@@ -38,10 +38,18 @@ FROM gitlab-registry.mpcdf.mpg.de/nomad-lab/nomad-fair:latest
 # Switch to root user to install packages to the system with pip
 USER root
 
+# for installing a python repo from github
 RUN apt-get update && apt-get -y install git
 
+RUN pip install --upgrade pip
+
+# installs nomad version 1.3.6 - which is required by the nomad-schema-plugin-run depencency. 
+# Automatic dependency resolving is not working! 
+# REPLACE the following line as soon as a stable nomad version is available
+RUN pip install https://gitlab.mpcdf.mpg.de/api/v4/projects/2187/packages/pypi/files/472e0cb3bc16d51251a84464686db9e1ce80791a945ffa5faa3e69ee869b6012/nomad-lab-1.3.6.dev41+g0347838e4.tar.gz
+
 # Install your plugin here, e.g.:
-RUN pip install git+https://github.com/pedestrian-dynamics-HM/nomad-pedestrian-dynamics-extension.git
+RUN pip install git+https://github.com/pedestrian-dynamics-HM/nomad-pedestrian-dynamics-extension.git@main
 
 # Remember to switch back to the 'nomad' user
 USER nomad
