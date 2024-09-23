@@ -39,5 +39,6 @@ class Trajectories(PlotSection):
         super(Trajectories, self).normalize(archive, logger)
 
         figure1 = px.scatter(x=self.position_x, y=self.position_y, title=f"X-Y-Position {self.pedestrian_id}")
+        figure1.layout.yaxis.scaleanchor = "x"
         figure_json = figure1.to_plotly_json()
         self.figures.append(PlotlyFigure(label='X-Y-Position', index=0, figure=figure_json))
