@@ -261,9 +261,9 @@ class VadereParser:
             sec_run.time_run.date_end = time.mktime(date.timetuple())
 
 
-        sec_run.method.append(self.simulation.model)
+        #sec_run.method.append(self.simulation.model)
 
-        sec_run.system.append(self.simulation.scenario)
+        #sec_run.system.append(self.simulation.scenario)
 
         archive.run.append(sec_run)
 
