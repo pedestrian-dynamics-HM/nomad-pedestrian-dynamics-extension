@@ -198,6 +198,7 @@ class VadereParser:
             lower_bound = evaluation_time
             upper_bound = lower_bound + evaluation_time
 
+            #TODO replace this coarse density estimation
             position = trajectories[(trajectories['time'] >= lower_bound) & (trajectories['time'] <= upper_bound)]
             position = position[~position.duplicated('pedestrian_id', keep="first")]  # only keep first position
             densities__, _, _ = np.histogram2d(position["position_x"], position["position_y"], bins=[gridx, gridy])

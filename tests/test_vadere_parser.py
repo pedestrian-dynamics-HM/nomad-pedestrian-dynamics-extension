@@ -30,7 +30,7 @@ def test_entry_point_configuration():
     This requires that the entry point is correctly specified in pyproject.toml and nomad_pedestrian_dynamics_extension/__init__
     """
 
-    data_path = os.path.join(os.path.dirname(__file__), "data", "basic_2_density_discrete_ca_2024-08-05_12-33-49.69" , "postvis.traj")
+    data_path = os.path.join(os.path.dirname(__file__), "data", "basic_2_density_discrete_ca_2024-08-05_12-33-49.69" , "basic_2_density_discrete_ca.scenario")
     archive = parse(data_path)
 
     from nomad.client import normalize_all
