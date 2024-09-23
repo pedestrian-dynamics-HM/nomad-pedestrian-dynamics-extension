@@ -247,27 +247,33 @@ class VadereParser:
 
         #archive.simulation = self.simulation
 
-        sec_run = Run()
-        archive.run.append(sec_run)
-
-        sec_run.program = Program(
+        # sec_run = Run()
+        #
+        #
+        self.simulation.program = Program(
             name='Vadere', version=self.scenario_parser.get("release")
         )
+        #
+        # sec_run.time_run = TimeRun()
+        #
+        # if self.scenario_parser.get("processWriters").get('isTimestamped'):
+        #     day = re.search('\d{4}-\d{2}-\d{2}', self.maindir)
+        #     date = datetime.datetime.strptime(day.group(), '%Y-%m-%d').date()
+        #     sec_run.time_run.date_end = time.mktime(date.timetuple())
+        #
+        #
+        #
+        # print("test")
+        #
+        # sec_run.m_add_sub_section(VadereRun.model.m_def, self.simulation.model)
 
-        sec_run.time_run = TimeRun()
-
-        if self.scenario_parser.get("processWriters").get('isTimestamped'):
-            day = re.search('\d{4}-\d{2}-\d{2}', self.maindir)
-            date = datetime.datetime.strptime(day.group(), '%Y-%m-%d').date()
-            sec_run.time_run.date_end = time.mktime(date.timetuple())
+        #sec_run.m_add_sub_section(VadereRun.scenario.m_def, self.simulation.scenario)
 
 
 
-        print("test")
+        sec_run = self.simulation
 
-        sec_run.m_add_sub_section(VadereRun.model, self.simulation.model)
-
-        sec_run.m_add_sub_section(VadereRun.scenario, self.simulation.scenario)
+        archive.run.append(sec_run)
 
 
         print()
