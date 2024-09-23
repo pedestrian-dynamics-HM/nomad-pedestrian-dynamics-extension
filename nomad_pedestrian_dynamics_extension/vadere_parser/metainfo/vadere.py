@@ -11,7 +11,7 @@ from nomad.metainfo import Section, Quantity, SubSection, Datetime
 from plotly import graph_objs as go
 from plotly import express as px
 
-from runschema.run import Run, Program, TimeRun
+from runschema.run import Run, Program, TimeRun, Method, System
 
 
 import numpy as np
@@ -31,7 +31,7 @@ class PsychologyModel(ArchiveSection):
 
 
 
-class Model(ArchiveSection):
+class Model(Method):
     m_def = Section(name="model")
 
     locomotion_model = Quantity(
@@ -50,7 +50,7 @@ class Model(ArchiveSection):
 
 
 
-class Scenario(ArchiveSection):
+class Scenario(System):
 
     m_def = Section()
 
@@ -77,8 +77,6 @@ class Scenario(ArchiveSection):
 
 class VadereRun(Run):
     m_def = Section(name="simulation")
-
-
 
     software_name = Quantity(
         type=str, description="""Name of the software used for the simulation."""
