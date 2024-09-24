@@ -16,7 +16,7 @@ This plug-in provides a NOMAD parser, a NOMAD schema and normalizing functionali
 If you are not familiar with these concepts, please read our [overview of NOMAD concepts](docs/concepts/plugin_types_and_data_processing.md).
 
 
-## Dependencies
+### Re-using existing NOMAD plug-ins
 
 NOMAD provides several plug-ins for ["computational data"](https://nomad-lab.eu/prod/v1/docs/examples/computational_data/schema_plugins.html) that are data produced by simulators.
 This plug-in is based on the plug-in ```nomad-schema-plugin-run```. 
@@ -27,14 +27,34 @@ and under the [Python package registry](https://pypi.org/project/nomad-schema-pl
 
 
 
+### Developing and testing the plug-in locally (this does not require a running NOMAD Oasis)
+This plug-in was tested with Python3.9.
 
-## Testing plug-ings locally (this does not require a running NOMAD Oasis)
+To test the plug-in you need to install the Python package ```nomad-lab```. The plug-in ```nomad-schema-plugin-run``` requires a 
+nomad-lab version that is not published under the Python package index registry (see the [issue](https://github.com/pedestrian-dynamics-HM/nomad-pedestrian-dynamics-extension/issues/3)
 
-Simply run the *.py tests in [tests directory](tests).
+We recommend the following steps to avoid dependency conflicts:
+
+1. Create a virtual Python3.9 environment and activate it:
+```
+python3.9 -m venv myvirtualenv
+source myvirtualenv/bin/activate
+```
+2. Install ```nomad-lab``` using NOMAD's internal registry:
+```
+pip install https://gitlab.mpcdf.mpg.de/api/v4/projects/2187/packages/pypi/files/472e0cb3bc16d51251a84464686db9e1ce80791a945ffa5faa3e69ee869b6012/nomad-lab-1.3.6.dev41+g0347838e4.tar.gz
+```
+3. Install the plug-in (Note: the dependency handling will fail because the required nomad-lab version is not published under the Python package registry.)
+```
+pip install nomad-schema-plugin-run
+```
+
+
+After your system setup simply run the *.py tests in [tests directory](tests).
 Please also see the [documentation](docs/index.md).
 
 
-## Running the plug-ins in a NOMAD oasis
+### Running the plug-ins in a NOMAD oasis
 
 Please follow the instructions from: https://nomad-lab.eu/prod/v1/docs/howto/oasis/plugins_install.html
 
@@ -102,7 +122,7 @@ docker compose up -d
 ```
 Open http://localhost/nomad-oasis in your browser.
 
-### Uploading entries
+#### Uploading entries
 
 One can upload a single simulation run or a collection of simulation runs. 
 This repository contains *.zip-files for testing both functionalities:
