@@ -44,11 +44,13 @@ source myvirtualenv/bin/activate
 ```
 pip install https://gitlab.mpcdf.mpg.de/api/v4/projects/2187/packages/pypi/files/472e0cb3bc16d51251a84464686db9e1ce80791a945ffa5faa3e69ee869b6012/nomad-lab-1.3.6.dev41+g0347838e4.tar.gz
 ```
-3. Install the plug-in (Note: the dependency handling will fail because the required nomad-lab version is not published under the Python package registry.)
+3. Install the plug-in 
 ```
 pip install nomad-schema-plugin-run
 ```
-
+Note: the automatic dependency handling (step 3) would try to install nomad-lab over the Python package registry.
+Because the required nomad-lab version is not published under the Python package registry the dependency handling fails.
+We prevent from this by manually installing nomad-lab in step 2.
 
 After your system setup simply run the *.py tests in [tests directory](tests).
 Please also see the [documentation](docs/index.md).
