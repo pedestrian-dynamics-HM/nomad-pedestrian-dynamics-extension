@@ -3,7 +3,29 @@
 This is a collection of the NOMAD parsers for the following codes:
 - [Vadere](https://www.vadere.org)
 
-If you are not familiar with schema plug-ins (normalizer plug-ins) and parser plug-ins, please read our [overview of NOMAD concepts](docs/concepts/plugin_types_and_data_processing.md).
+This plug-in parses simulation output from a Vadere simulation (*.scenario, postvis.traj) into a dictionary.
+In addition, it computes macroscopic quantities from the microscopic data:
+
+
+![img.png](docs/images/macroscopic_qunatities.png)
+
+
+
+
+This plug-in provides a NOMAD parser, a NOMAD schema and normalizing functionalities.
+If you are not familiar with these concepts, please read our [overview of NOMAD concepts](docs/concepts/plugin_types_and_data_processing.md).
+
+
+## Dependencies
+
+NOMAD provides several plug-ins for ["computational data"](https://nomad-lab.eu/prod/v1/docs/examples/computational_data/schema_plugins.html) that are data produced by simulators.
+This plug-in is based on the plug-in ```nomad-schema-plugin-run```. 
+The source code of this plug-in is publicly available on [github](https://github.com/nomad-coe/nomad-schema-plugin-run) 
+and under the [Python package registry](https://pypi.org/project/nomad-schema-plugin-run/).
+
+
+
+
 
 
 ## Testing plug-ings locally (this does not require a running NOMAD Oasis)
@@ -84,26 +106,14 @@ Open http://localhost/nomad-oasis in your browser.
 
 One can upload a single simulation run or a collection of simulation runs. 
 This repository contains *.zip-files for testing both functionalities:
-
-- [archive of a single simulation run](tests/data/basic_2_density_discrete_ca_2024-08-05_12-33-49.69.zip)
-- [archive with multiple simulation runs](tests/data/several_scenario_runs.zip)
+- [archive of a single simulation run](tests/data/basic_2_density_discrete_ca_2024-09-23_15-52-24.887.zip)
+- [archive with multiple simulation runs](tests/data/several_simulation_runs.zip)
 
 The following snapshot was taken after uploading the two archives to an empty oasis:
 
 ![single_and_multiple_runs.png](docs/images/single_and_multiple_runs.png)
 
 
-
-### WIP: Vadere plug-in structure
-
-For each data entry the raw files are available. The mainfile is Vadere's trajectory file:
-
-![snapshot_traj.png](docs/images/snapshot_traj.png)
-
-
-Meta information is automatically extracted from the *.scenario file. The structure of the sections is still WIP.
-
-![vadere_structure.png](docs/images/vadere_structure.png)
 
 
 
