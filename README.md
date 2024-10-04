@@ -117,6 +117,12 @@ Replace the Docker image "gitlab-registry.mpcdf.mpg.de/nomad-lab/nomad-fair:late
     #image: gitlab-registry.mpcdf.mpg.de/nomad-lab/nomad-fair:latest
     image: nomad-with-plugins
 ```
+Now the image needs to be built by the following command:
+```
+docker build -t nomad-with-plugins .
+```
+This command builds the docker image from the Dockerfile in the current working
+directory. 
 
 Start the oasis
 ```
